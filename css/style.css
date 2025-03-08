@@ -149,8 +149,8 @@ blockquote:before{
 	right:0;
 	top:0;
 	bottom:0;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#374050), to(#798696));
-	background-image: linear-gradient(to bottom, #374050 0%, #798696 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#303948), to(#404f63));
+	background-image: linear-gradient(to bottom, #303948 0%, #404f63 100%);
 	opacity: 0.7;
 }
 
