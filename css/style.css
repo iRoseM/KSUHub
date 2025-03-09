@@ -32,7 +32,7 @@ Table OF Contents
 \*------------------------------------*/
 /* --- typography --- */
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Noto Kufi Arabic', sans-serif;
 	font-size: 15px;
     font-weight: 400;
     color: #798696;
@@ -63,7 +63,7 @@ h4 {
 }
 
 a {
-	font-family: 'Lato', sans-serif;
+	font-family: 'Noto Kufi Arabic', sans-serif;
 	color: #374050;
 	font-weight: 700;
 }
@@ -84,6 +84,8 @@ ul,ol{
 
 .white-text {
 	color: #FFF;
+	text-align: justify;
+	
 }
 
 blockquote {
@@ -96,7 +98,7 @@ blockquote {
 
 blockquote:before{
 	content:"\f10d";
-	font-family:fontAwesome;
+	font-family: 'Noto Kufi Arabic', sans-serif;
 	position:absolute;
 	left:0;
 	top:0;
@@ -159,7 +161,7 @@ blockquote:before{
 	position:relative;
 	display:inline-block;
 	padding:10px 30px;
-	background-color: #FF6700;
+	background: linear-gradient(90deg, #ff7e5f, #feb47b);
 	border: 2px solid transparent;
 	border-radius: 40px;
 	color: #FFF;
@@ -168,8 +170,9 @@ blockquote:before{
 }
 
 .main-button:hover , .main-button:focus {
-	background-color:#fff;
-	border: 2px solid #FF6700;
+	background:#fff;
+	border: 2px solid;
+	border-color: linear-gradient(90deg, #feb47b, #ff7e5f);
 	color:#FF6700;
 }
 
@@ -179,7 +182,7 @@ blockquote:before{
 
 .main-button.icon-button:after {
 	content:"\f178";
-	font-family:FontAwesome;
+	font-family: "FontAwesome";
 	position:absolute;
 	width: 30px;
 	right: 15px;
@@ -421,7 +424,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 /* -- Breadcrumb -- */
 .hero-area-tree li {
 	display:inline-block;
-	font-family: 'Lato', sans-serif;
+	font-family: 'Noto Kufi Arabic', sans-serif;
 	font-weight:600;
 	font-size:14px;
 	color:rgba(255, 255, 255, 0.8);
@@ -911,13 +914,13 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 .pagination-next:after {
 	content:"\f178";
-	font-family:FontAwesome;
+	font-family: 'Noto Kufi Arabic', sans-serif;
 	margin-left:15px;
 }
 
 .pagination-back:before {
 	content:"\f177";
-	font-family:FontAwesome;
+	font-family: 'Noto Kufi Arabic', sans-serif;
 	margin-right:15px;
 }
 
@@ -1347,7 +1350,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     align-items: center;
     height: 100vh;
     position: relative;
-    text-align: center;
+    text-align: right;
     background-color: #1a1a1a;
 }
 
@@ -1355,7 +1358,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
     padding: 60px;
-	margin-left: 80px;
+	margin-right: 100px;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     max-width: 500px;
@@ -1367,11 +1370,12 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     color: #ffffff;
     font-size: 18px;
     line-height: 1.6;
+	text-align: justify;
 }
 
 .log-form-group {
     margin-bottom: 25px;
-    text-align: left;
+    text-align: right;
 }
 
 .log-form-control {
@@ -1410,10 +1414,18 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     transition: all 0.3s ease;
     cursor: pointer;
     margin-top: 20px;
+	text-align: center;
 }
 .text-content-wrapper{
 	margin-top: 150px; 
-	padding-right: 40px;
+	padding-right: 10px;
+}
+.text-content-wrapper h1,
+.text-content-wrapper p {
+    width: 400px;
+    text-align: right;
+    margin: 0;
+    padding-left: 40px; 
 }
 .log-main-button:hover {
     background: linear-gradient(90deg, #feb47b, #ff7e5f);
@@ -1449,5 +1461,101 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
     .log-main-button {
         font-size: 16px;
+    }
+}
+
+/* Signup box styling */
+.log-signup-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    padding: 40px; 
+    margin-right: 80px; 
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    max-width: 450px; /* Reduced max-width */
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Text styling for white text */
+.log-white-text {
+    color: #ffffff;
+    font-size: 16px; 
+    line-height: 1.5; 
+    text-align: justify;
+}
+
+/* Form group styling */
+.log-form-group {
+    margin-bottom: 20px; 
+    text-align: right;
+}
+
+/* Input field styling */
+.log-form-control {
+    width: 100%;
+    padding: 12px; 
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 14px; 
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Placeholder styling */
+.log-form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px; 
+}
+
+/* Style for the options in the dropdown */
+.log-form-control option {
+    background-color: #374050; /* Background color for options */
+    color: #ffffff; /* Text color for options */
+}
+
+/* Hover effect for options */
+.log-form-control option:hover {
+    background-color: #feb47b; /* Background color on hover */
+    color: #2c2c2c; /* Text color on hover */
+}
+
+/* Signup button styling */
+.log-main-button {
+    width: 100%;
+    padding: 12px; 
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    color: #2c2c2c;
+    font-weight: bold;
+    font-size: 16px; 
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-top: 15px; 
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .log-signup-box {
+        padding: 20px;
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    .text-content-wrapper {
+        display: none; 
+    }
+
+    .log-form-control {
+        padding: 10px; 
+    }
+
+    .log-main-button {
+        font-size: 14px;
     }
 }
