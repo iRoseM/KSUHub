@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Login | KSUHub</title>
+
+        <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
+        <!-- Google font -->
+        <link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
+
+        <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+
+        <!-- Font Awesome Icon -->
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+
+        <!-- Custom stylesheet -->
+        <link type="text/css" rel="stylesheet" href="css/style.css"/>
+    </head>
+
+    <body>
+        <!-- Header -->
+        <header id="header" class="transparent-nav">
+            <div class="container">
+                <div class="navbar-header">
+                    <!-- Logo -->
+                    <div class="navbar-brand">
+                        <a class="logo" href="index.html">
+                            <img src="./img/logo-alt.png" alt="KSUHub Logo">
+                        </a>
+                    </div>
+                    <!-- /Logo -->
+
+                    <!-- Mobile toggle -->
+                    <button class="navbar-toggle">
+                        <span></span>
+                    </button>
+                    <!-- /Mobile toggle -->
+                </div>
+            </div>
+        </header>
+        <!-- /Header -->
+
+    
+    <!-- Background Image -->
+    <div class="bg-image bg-parallax overlay" style="background-image: url(./img/home-background.png);"></div>
+    <!-- /Background Image -->
+
+    <!-- Main Content Wrapper -->
+    <div class="home-wrapper">
+        <div class="container">
+            <div class="row">
+                <!-- Left Column: Text Content -->
+                <div class="col-md-6 text-content-wrapper">
+                    <h1 class="white-text" style="color: #feb47b;">Welcome!. </h1>
+                    <p class="lead white-text">
+                        Discover student clubs, manage events, and engage with your university community—all in one place.
+                    </p>
+                </div>
+
+                <!-- Right Column: Login Box -->
+                <div class="col-md-6">
+                    <div class="log-login-box">
+                        <h2 class="log-white-text text-center">Login to KSUHub</h2>
+                        <form action="dashboard.html" method="POST">
+                            <div class="log-form-group">
+                                <label class="log-white-text">Email</label>
+                                <input type="email" class="log-form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="log-form-group">
+                                <label class="log-white-text">Password</label>
+                                <input type="password" class="log-form-control" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="log-main-button log-icon-button btn-block">LOGIN</button>
+                            <p class="text-center log-white-text mt-3">
+                                Don't have an account? 
+                                <a href="register.html" class="log-white-text"><strong>Sign Up</strong></a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
