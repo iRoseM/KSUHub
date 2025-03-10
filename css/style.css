@@ -1232,7 +1232,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 		margin-top:20px;
 	}
 	
-	/*-- Contact page --*/
 	.contact-form  {
 		margin-bottom:40px;
 	}
@@ -1445,14 +1444,13 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     text-decoration: underline;
 }
 
-/* Radio Buttons Container */
+/* Radio Button Input login page */
 .radio-buttons {
     display: flex;
     gap: 50px;
     margin-top: 10px; 
 }
 
-/* Radio Button Label */
 .radio-button {
     display: flex;
     align-items: center;
@@ -1460,7 +1458,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     cursor: pointer;
 }
 
-/* Radio Button Input */
 .radio-button input[type="radio"] {
     appearance: none;
     width: 16px;
@@ -1472,13 +1469,12 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     position: relative;
 }
 
-/* Radio Button Input (Checked State) */
 .radio-button input[type="radio"]:checked {
     background-color: #feb47b; 
     border-color: #feb47b;
 }
 
-/* Radio Button Label Text */
+
 .radio-label {
     color: #ffffff;
     font-size: 16px;
