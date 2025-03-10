@@ -266,7 +266,7 @@ textarea {
                     <p><strong>الكلية:</strong> كلية علوم الحاسب</p>
                     <p><strong>المستوى الدراسي:</strong> المستوى الخامس</p>
                     <p><strong>نبذة:</strong> طالب مهتم بالذكاء الاصطناعي</p>
-                    <form action="edit-profile.html" method="get">
+                    <form action="student-edit.html" method="get">
                         <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button>
                     </form>
                 </div>
@@ -279,7 +279,7 @@ textarea {
                     <form>
                         <div class="form-group">
                             <label for="committee">اللجنة:</label>
-                            <select class="form-control" id="committee" required onchange="toggleFormFields()">
+                            <select class="form-control" id="committee" required>
                                 <option value="" disabled selected>اختر اللجنة</option>
                                 <option value="HR">لجنة الموارد البشرية</option>
                                 <option value="Marketing">لجنة التسويق</option>
@@ -288,21 +288,19 @@ textarea {
                             </select>
                         </div>
 
-                        <div id="extra-fields">
-                            <div class="form-group">
-                                <label for="hours">عدد الساعات:</label>
-                                <input type="number" class="form-control" id="hours" min="1" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="date">التاريخ:</label>
-                                <input type="date" class="form-control" id="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="workDescription">تفاصيل العمل:</label>
-                                <textarea class="form-control" id="workDescription" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn main-button">إضافة الساعات</button>
+                        <div class="form-group">
+                            <label for="hours">عدد الساعات:</label>
+                            <input type="number" class="form-control" id="hours" min="1" required>
                         </div>
+                        <div class="form-group">
+                            <label for="date">التاريخ:</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="workDescription">تفاصيل العمل:</label>
+                            <textarea class="form-control" id="workDescription" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn main-button">إضافة الساعات</button>
                     </form>
                 </div>
             </div>
@@ -395,20 +393,6 @@ textarea {
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
-
-
-        <script>
-            function toggleFormFields() {
-                var selectedCommittee = document.getElementById("committee").value;
-                var extraFields = document.getElementById("extra-fields");
-            
-                if (selectedCommittee) {
-                    extraFields.style.display = "block"; // Show the rest of the form
-                } else {
-                    extraFields.style.display = "none"; // Hide the fields if no committee is selected
-                }
-            }
-        </script>
             
 </body>
 </html>

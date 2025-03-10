@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KSUHub | الملف الشخصي</title>
+    
+    <!-- Tab icon -->
+    <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+    <!-- Custom stylesheet -->
+    <link type="text/css" rel="stylesheet" href="css/style.css"/>
+
+    <!-- Arabic font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* RTL Support */
+        body {
+            direction: rtl;
+            text-align: right;
+            background-color: #f8f9fa;
+        }
+
+        /* Form Container */
+        .edit-profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Title */
+        .edit-profile-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Input Fields */
+        .form-control {
+            font-size: 16px;
+            padding: 12px;
+        }
+
+        /* Save Button */
+        .save-btn {
+            background-color: #FF6700;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .save-btn:hover {
+            background-color: #d55a00;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header" class="transparent-nav">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a class="logo" href="home.html">
+                        <img src="./img/logo.png" alt="logo">
+                    </a>
+                </div>
+
+                <!-- Mobile toggle -->
+                <button class="navbar-toggle">
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav id="nav">
+                <ul class="main-menu nav navbar-nav navbar-right">
+                    <li><a href="home.html">الصفحة الرئيسية</a></li>
+                    <li><a href="clubs.html"> النوادي</a></li>
+                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                    <li><a href="contact.html">تواصل معنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Area -->
+    <div class="hero-area section">
+        <div class="bg-image bg-parallax overlay" style="background-image:url(./img/std-profile-background.png); background-size: contain; background-position: center; background-repeat: no-repeat; height: 80vh; width: 100%;"></div>
+        <div class="container text-center">
+            <h1 class="white-text">تعديل الملف الشخصي</h1>
+        </div>
+    </div>
+
+
+    <!-- Edit Profile Form -->
+    <div class="edit-profile-container">
+        <h2>تعديل الملف الشخصي</h2>
+        <form action="student-profile.html" method="post">
+            <div class="form-group">
+                <label for="name">اسم الطالب:</label>
+                <input type="text" class="form-control" id="name" value="اسم الطالب" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" class="form-control" id="email" value="student@student.ksu.edu.sa" required>
+            </div>
+
+            <div class="form-group">
+                <label for="college">الكلية:</label>
+                <input type="text" class="form-control" id="college" value="كلية علوم الحاسب" required>
+            </div>
+
+            <div class="form-group">
+                <label for="level">المستوى الدراسي:</label>
+                <input type="text" class="form-control" id="level" value="المستوى الخامس" required>
+            </div>
+
+            <div class="form-group">
+                <label for="bio">نبذة:</label>
+                <textarea class="form-control" id="bio" rows="3">طالب مهتم بالذكاء الاصطناعي</textarea>
+            </div>
+
+            <button type="submit" class="save-btn">حفظ التعديلات</button>
+            <a href="student-profile.html" class="btn back-btn">رجوع</a>
+        </form>
+    </div>
+
+</body>
+
+</html>
