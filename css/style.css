@@ -1,15 +1,4 @@
 /*
-Template Name: HTML Education Template
-Author: yaminncco
-
-Colors:
-	Body 		: #798696
-	Headers 	: #374050
-	Primary 	: #FF6700
-	Grey 		: #EBEBEB
-
-Fonts: Lato & Montserrat
-
 Table OF Contents
 ------------------------------------
 1 > General
@@ -120,9 +109,9 @@ blockquote:before{
 }
 
 .section-hr {
-	margin-top:80px;
-	margin-bottom:80px;
-	border-color: #EBEBEB;
+	margin-top:30px;
+	margin-bottom:40px;
+	border-color: #ffffff;
 }
 
 .section-header {
@@ -558,14 +547,17 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 .course {
 	margin-top:20px;
 	margin-bottom:20px;
+	text-align: center;
 }
 
 .course .course-img {
 	position: relative;
 	display:block;
 	margin-bottom:20px;
+	box-shadow: 5px 5px 5px rgba(55, 54, 54, 0.1);
 	border-radius:4px;
 	overflow:hidden;
+
 }
 
 .course .course-img > img {
@@ -581,6 +573,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	top:0;
 	background-color:#FF6700;
 	opacity:0;
+	box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
+	border-radius:4px;
 	-webkit-transition:0.2s opacity;
 	transition:0.2s opacity;
 }
@@ -618,13 +612,14 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 .course .course-title {
 	display:block;
-	height:42px;
+	height:20px;
 }
 
 .course .course-details {
 	margin-top: 20px;
-	padding-top: 10px;
+	padding-top: 5px;
 	border-top: 1px solid #EBEBEB;
+	font-size: 12px;
 }
 
 .course .course-details .course-price {
@@ -805,6 +800,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 /* -- Single Blog -- */
 .single-blog {
 	margin-bottom:40px;
+	text-align: center;
 }
 
 .single-blog .blog-img > a {
@@ -812,6 +808,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	display:block;
 	border-radius:4px;
 	overflow:hidden;
+	box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
+	margin-bottom: 4px;
 }
 
 .single-blog .blog-img img {
@@ -839,6 +837,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	margin-top: 20px;
 	padding-top: 10px;
 	border-top: 1px solid #EBEBEB;
+	text-align: left;
 }
 
 .single-blog .blog-meta .blog-meta-author > a {
@@ -853,6 +852,19 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	color: #798696;
 }
 
+/* .club-name-container{
+	margin-top: 200px;
+	padding-top: 200px;
+} */
+
+.club-name {
+	color: #292828;
+	font-size: 20px;
+	font-weight: 600;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-align: center;
+}
 /* -- Pagination -- */
 .post-pagination {
 	margin-top:40px;
