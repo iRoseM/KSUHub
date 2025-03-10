@@ -5,11 +5,9 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Login | KSUHub</title>
-
+        <title>KSUHub | تسجيل الدخول </title>
+        <!-- tab icon -->
         <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
-        <!-- Google font -->
-        <link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
 
         <!-- Bootstrap -->
         <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
@@ -19,10 +17,14 @@
 
         <!-- Custom stylesheet -->
         <link type="text/css" rel="stylesheet" href="css/style.css"/>
+        <!-- Arabic font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Baloo+Da+2:wght@400..800&family=Bebas+Neue&family=Cinzel:wght@400..900&family=Courgette&family=Noto+Kufi+Arabic:wght@100..900&family=Ovo&family=Quattrocento:wght@400;700&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     </head>
 
     <body>
-        <!-- Header -->
+
         <header id="header" class="transparent-nav">
             <div class="container">
                 <div class="navbar-header">
@@ -32,57 +34,71 @@
                             <img src="./img/logo-alt.png" alt="KSUHub Logo">
                         </a>
                     </div>
-                    <!-- /Logo -->
 
                     <!-- Mobile toggle -->
                     <button class="navbar-toggle">
                         <span></span>
                     </button>
-                    <!-- /Mobile toggle -->
+
                 </div>
             </div>
         </header>
-        <!-- /Header -->
 
     
     <!-- Background Image -->
     <div class="bg-image bg-parallax overlay" style="background-image: url(./img/home-background.png);"></div>
-    <!-- /Background Image -->
 
     <!-- Main Content Wrapper -->
     <div class="home-wrapper">
         <div class="container">
-            <div class="row">
-                <!-- Left Column: Text Content -->
-                <div class="col-md-6 text-content-wrapper">
-                    <h1 class="white-text" style="color: #feb47b;">Welcome!. </h1>
-                    <p class="lead white-text">
-                        Discover student clubs, manage events, and engage with your university community—all in one place.
-                    </p>
-                </div>
-
-                <!-- Right Column: Login Box -->
+            
                 <div class="col-md-6">
                     <div class="log-login-box">
-                        <h2 class="log-white-text text-center">Login to KSUHub</h2>
+                        <h2 class="log-white-text text-center" style="text-align: center;"> KSUHub تســجيل الدخول إلى</h2>
                         <form action="dashboard.html" method="POST">
                             <div class="log-form-group">
-                                <label class="log-white-text">Email</label>
-                                <input type="email" class="log-form-control" placeholder="Enter your email" required>
+                                <!-- Email -->
+                            <div class="log-form-group">
+                                <label class="log-white-text">البريد الإلكتروني</label>
+                                <input type="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني الجامعي (يبدأ بـ 4)" pattern="4.+@student\.ksu\.edu\.sa" required>
+                            </div>
                             </div>
                             <div class="log-form-group">
-                                <label class="log-white-text">Password</label>
-                                <input type="password" class="log-form-control" placeholder="Enter your password" required>
+                                <label class="log-white-text">كلـمة المــرور</label>
+                                <input type="password" class="log-form-control" placeholder="أدخل كلـمة المــرور" required>
+                            </div>
+
+                            <!-- Role Selection Radio Buttons -->
+                            <div class="log-form-group">
+                                <div class="role-radio-buttons" style="text-align: center;">
+                                    <label class="radio-label">
+                                        <input type="radio" name="role" value="clubAdmin" required>
+                                        <span class="radio-custom"></span>
+                                        مسؤول نادي
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="role" value="student" required>
+                                        <span class="radio-custom"></span>
+                                        طالب
+                                    </label>
+                                </div>
                             </div>
                             <!-- <button type="submit" class="log-main-button log-icon-button btn-block">LOGIN</button> -->
-                            <a href="home.html" class="log-main-button log-icon-button btn-block">LOGIN</a>
-                            <p class="text-center log-white-text mt-3">
-                                Don't have an account? 
-                                <a href="signup.html" class="log-white-text"><strong>Sign Up</strong></a>
+                            <a href="home.html" class="log-main-button log-icon-button btn-block">تســجيل الدخول</a>
+                            <p class="text-center log-white-text mt-3" style="text-align: center;">
+                                لـيس لديـك حسـاب؟ 
+                                <a href="signup.html" class="log-white-text"><strong>سـجّل الآن</strong></a>
                             </p>
                         </form>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 text-content-wrapper">
+                        <h1 class="white-text" style="color: #feb47b; text-align: right;">.!مـــرحــبًا </h1>
+                        <p class="lead white-text" style="width: 400px; text-align: right; padding: 0px; margin: 0px;">
+                            - تفــاعل مع زمـلائك ومجتمعك، انضم إلى الفعاليات، وكن جزءًا من مجــتمع جامعي متمـيز - كــل ذلـك في منصة واحد
+                        </p>
+                    </div>
             </div>
         </div>
     </div>
