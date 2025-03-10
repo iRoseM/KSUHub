@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KSUHub | ملف الطالب</title>
+    <title>KSUHub | الملف الشخصي</title>
     
-    
-    <!-- tab icon -->
+    <!-- Tab icon -->
     <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
 
     <!-- Bootstrap -->
@@ -24,12 +23,182 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+
+    <style> 
+
+    /* Ensure RTL Layout */
+body {
+    direction: rtl;
+    text-align: right;
+    background-color: #f8f9fa;
+}
+
+/* Container Adjustments */
+.profile-container {
+    margin-top: 100px;
+}
+
+
+/* Hero Section: Center Content Vertically */
+.hero-area {
+    height: 80vh; /* Set height to occupy viewport */
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    text-align: center; /* Ensure text is centered */
+}
+
+
+/* Profile Card Styling */
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Profile Image */
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* Profile Text Styling */
+.profile-card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Edit Profile Button */
+.edit-profile-btn {
+    background-color: #FF6700;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.edit-profile-btn:hover {
+    background-color: #d55a00;
+}
+
+/* Volunteer Form Styling */
+.volunteer-form {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Elements */
+.volunteer-form .form-group {
+    margin-bottom: 15px;
+}
+
+.volunteer-form label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.volunteer-form input,
+.volunteer-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Submit Button */
+.main-button {
+    background-color: #FF6700;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.main-button:hover {
+    background-color: #d55a00;
+}
+
+/* Volunteer Log Styling */
+.volunteer-log {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Table Styling */
+.volunteer-log table {
+    width: 100%;
+    text-align: center;
+}
+
+.volunteer-log th {
+    background-color: #FF6700;
+    color: white;
+    padding: 10px;
+}
+
+.volunteer-log td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th{
+    text-align: center;
+
+}
+
+/* Make Sections Responsive */
+@media (max-width: 768px) {
+    .profile-container {
+        padding-bottom: 150px;
+    }
+
+    .profile-card, 
+    .volunteer-form, 
+    .volunteer-log {
+        width: 100%;
+        text-align: center;
+    }
+
+    .edit-profile-btn, 
+    .main-button {
+        width: 100%;
+    }
+
+    .profile-card {
+        margin-bottom: 20px;
+    }
+    
+    .volunteer-form {
+        margin-top: 10px;
+    }
+}
+
+
+    </style>
 </head>
 
 <body>        
     <header id="header" class="transparent-nav">
         <div class="container">
-
             <div class="navbar-header">
                 <!-- Logo -->
                 <div class="navbar-brand">
@@ -53,11 +222,171 @@
                     <li><a href="contact.html">تواصل معنا</a></li>
                 </ul>
             </nav>
-
         </div>
     </header>
-        
-            
-</body>
+    
+    <!-- Hero Area -->
+    <div class="hero-area section">
+        <div class="bg-image bg-parallax overlay" style="background-image:url(./img/std-profile-background.png); background-size: contain; background-position: center; background-repeat: no-repeat; height: 80vh; width: 100%;"></div>
 
+        <div class="container text-center">
+            <h1 class="white-text">ملف الطالب</h1>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div class="container profile-container">
+        <div class="row">
+            <!-- Student Info (Profile Card) - First on small screens, right on large screens -->
+            <div class="col-md-4 order-1 order-md-2 d-flex align-items-center justify-content-center">
+                <div class="profile-card">
+                    <img src="img/profileIcon.png" class="profile-img" alt="Student Picture">
+                    <h3>اسم الطالب</h3>
+                    <p><strong>البريد الإلكتروني:</strong> student@student.ksu.edu.sa</p>
+                    <p><strong>الكلية:</strong> كلية علوم الحاسب</p>
+                    <p><strong>المستوى الدراسي:</strong> المستوى الخامس</p>
+                    <p><strong>نبذة:</strong> طالب مهتم بالذكاء الاصطناعي</p>
+                    <button class="edit-profile-btn">تعديل الملف الشخصي</button>
+                </div>
+            </div>
+    
+            <!-- Volunteer Hours Form - Second on small screens, left on large screens -->
+            <div class="col-md-8 order-2 order-md-1">
+                <div class="volunteer-form">
+                    <h3>إضافة الساعات التطوعية</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="activity">وصف النشاط:</label>
+                            <input type="text" class="form-control" id="activity" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="hours">عدد الساعات:</label>
+                            <input type="number" class="form-control" id="hours" min="1" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="date">التاريخ:</label>
+                            <input type="date" class="form-control" id="date" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="committee">اللجنة:</label>
+                            <input type="text" class="form-control" id="committee">
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="workDescription">تفاصيل العمل:</label>
+                            <textarea class="form-control" id="workDescription" rows="3"></textarea>
+                        </div>
+    
+                        <button type="submit" class="btn main-button">إضافة الساعات</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    
+    
+    
+        <!-- Volunteer Hours Log -->
+        <div class="volunteer-log">
+            <h3>سجل الساعات التطوعية</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>النشاط</th>
+                        <th>اللجنة</th>
+                        <th>التفاصيل</th>
+                        <th>الساعات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-03-09</td>
+                        <td>المشاركة في ورشة عمل</td>
+                        <td>التدريب</td>
+                        <td>تقديم محاضرة توعوية</td>
+                        <td>3</td>
+                    </tr>
+                    <tr>
+                        <td>2025-03-05</td>
+                        <td>تنظيم معرض</td>
+                        <td>اللوجستيات</td>
+                        <td>تنظيم وترتيب الفعاليات</td>
+                        <td>5</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Total Volunteer Hours -->
+            <div class="text-center" style="padding-top: 10px;">
+                <h3>إجمالي الساعات التطوعية: <span id="totalHours">8</span> ساعات</h3>
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Footer -->
+		<footer id="footer" class="section">
+
+			<div class="container">
+
+				<div class="row">
+
+					<!-- footer logo -->
+					<div class="col-md-6">
+						<div class="footer-logo">
+							<a class="logo" href="home.html">
+								<img src="./img/logo.png" alt="logo">
+							</a>
+						</div>
+					</div>
+
+					<!-- footer nav -->
+					<div class="col-md-6">
+						<ul class="footer-nav">
+							<li><a href="home.html">Home</a></li>
+							<li><a href="#">About</a></li>
+							<li><a href="#">Courses</a></li>
+							<li><a href="blog.html">Blog</a></li>
+							<li><a href="contact.html">Contact</a></li>
+						</ul>
+					</div>
+
+				</div>
+
+				<div id="bottom-footer" class="row">
+
+					<!-- social -->
+					<div class="col-md-4 col-md-push-8">
+						<ul class="footer-social">
+							<li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
+							<li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
+							<li><a href="#" class="google-plus"><i class="fa fa-google-plus"></i></a></li>
+							<li><a href="#" class="instagram"><i class="fa fa-instagram"></i></a></li>
+							<li><a href="#" class="youtube"><i class="fa fa-youtube"></i></a></li>
+							<li><a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a></li>
+						</ul>
+					</div>
+
+					<!-- copyright -->
+					<div class="col-md-8 col-md-pull-4">
+						<div class="footer-copyright">
+							<span>&copy; Copyright 2018. All Rights Reserved. | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com">Colorlib</a></span>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+		</footer>
+		<div id='preloader'><div class='preloader'></div></div>
+
+		<!-- jQuery Plugins -->
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+
+</body>
 </html>
