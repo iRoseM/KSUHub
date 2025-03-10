@@ -282,7 +282,33 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	        transform: translateY(0px);
 	opacity:1;
 }
+.main-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Adds space between menu items */
+}
 
+.logout-item {
+    margin-left: auto; /* Pushes the logout button to the right */
+    margin-right: 20px; /* Adds a gap between logout and other items */
+}
+
+.logout-button {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #cc0000;
+}
 
 /* -- Mobile Nav -- */
 @media only screen and (max-width: 767px) {
@@ -1595,4 +1621,91 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     .log-main-button {
         font-size: 14px;
     }
+}
+
+
+/* Team Section Styling */
+#ksuhub-team {
+    padding: 80px 0;
+    background-color: #f9f9f9;
+}
+
+.ksuhub-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.ksuhub-header {
+    margin-bottom: 50px;
+}
+
+.ksuhub-team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.ksuhub-team-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+}
+
+.ksuhub-team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ksuhub-team-image img {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: cover;
+}
+
+.ksuhub-team-social {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: -20px;
+    padding: 10px;
+    background: #fff;
+}
+
+.ksuhub-social-link {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1b4b75;
+    color: #fff;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.ksuhub-social-link:hover {
+    background: #0056b3;
+}
+
+.ksuhub-team-info {
+    padding: 20px;
+    text-align: center;
+}
+
+.ksuhub-instructor-name {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.ksuhub-instructor-role {
+    color: #6c757d;
+    font-size: 0.9rem;
 }
