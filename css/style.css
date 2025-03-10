@@ -1,15 +1,4 @@
 /*
-Template Name: HTML Education Template
-Author: yaminncco
-
-Colors:
-	Body 		: #798696
-	Headers 	: #374050
-	Primary 	: #FF6700
-	Grey 		: #EBEBEB
-
-Fonts: Lato & Montserrat
-
 Table OF Contents
 ------------------------------------
 1 > General
@@ -294,6 +283,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	opacity:1;
 }
 
+
 /* -- Mobile Nav -- */
 @media only screen and (max-width: 767px) {
 	#nav {
@@ -396,6 +386,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
             transform: translateY(-10px) rotate(-45deg);
 }
 
+
 /*------------------------------------*\
 	Hero Area
 \*------------------------------------*/
@@ -424,7 +415,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 /* -- Breadcrumb -- */
 .hero-area-tree li {
 	display:inline-block;
-	font-family: 'Noto Kufi Arabic', sans-serif;
+	font-family: 'Lato', sans-serif;
 	font-weight:600;
 	font-size:14px;
 	color:rgba(255, 255, 255, 0.8);
