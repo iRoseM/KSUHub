@@ -109,9 +109,9 @@ blockquote:before{
 }
 
 .section-hr {
-	margin-top:80px;
-	margin-bottom:80px;
-	border-color: #EBEBEB;
+	margin-top:30px;
+	margin-bottom:40px;
+	border-color: #ffffff;
 }
 
 .section-header {
@@ -547,14 +547,17 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 .course {
 	margin-top:20px;
 	margin-bottom:20px;
+	text-align: center;
 }
 
 .course .course-img {
 	position: relative;
 	display:block;
 	margin-bottom:20px;
+	box-shadow: 5px 5px 5px rgba(55, 54, 54, 0.1);
 	border-radius:4px;
 	overflow:hidden;
+
 }
 
 .course .course-img > img {
@@ -570,6 +573,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	top:0;
 	background-color:#FF6700;
 	opacity:0;
+	box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
+	border-radius:4px;
 	-webkit-transition:0.2s opacity;
 	transition:0.2s opacity;
 }
@@ -607,13 +612,14 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 .course .course-title {
 	display:block;
-	height:42px;
+	height:20px;
 }
 
 .course .course-details {
 	margin-top: 20px;
-	padding-top: 10px;
+	padding-top: 5px;
 	border-top: 1px solid #EBEBEB;
+	font-size: 12px;
 }
 
 .course .course-details .course-price {
