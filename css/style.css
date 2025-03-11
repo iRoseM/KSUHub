@@ -1,25 +1,6 @@
-/*
-Table OF Contents
-------------------------------------
-1 > General
-2 > Logo
-3 > Navigation
-4 > Hero Area
-5 > About & Why Us (Feature)
-6 > Courses
-7 > Footer
-8 > Contact Page
-9 > Blog Page
-10 > Blog Page Sidebar
-11 > Single Post Page
-12 > Responsive
-13 > Preloader
-------------------------------------*/
-
 /*------------------------------------*\
 	General
 \*------------------------------------*/
-/* --- typography --- */
 body {
     font-family: 'Noto Kufi Arabic', sans-serif;
 	font-size: 15px;
@@ -208,7 +189,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 }
 
 /*------------------------------------*\
-	Logo
+	Navigation bar
 \*------------------------------------*/
 .navbar-brand {
     padding: 0;
@@ -231,9 +212,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	}
 } 
 
-/*------------------------------------*\
-	Navigation
-\*------------------------------------*/
 .head-container{
 	margin-right: 0px;
 }
@@ -348,30 +326,30 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
         display: flex;
         flex-direction: column; /* Stack items vertically */
         align-items: flex-start; /* Align items to the left */
-        gap: 10px; /* Add space between stacked items */
+        gap: 10px; 
         margin: 0;
         padding: 0 20px; /* Add padding for better spacing */
     }
 
     .main-menu li {
-        width: 100%; /* Ensure full width for each item */
+        width: 100%; 
     }
 
     .main-menu li a {
         color: #374050 !important;
-        display: block; /* Make links block-level for better click area */
-        padding: 10px 0; /* Add padding for better spacing */
-        margin-left: 0; /* Remove left margin */
+        display: block; 
+        padding: 10px 0; 
+        margin-left: 0; 
     }
 
     .logout-item {
-        margin-left: 0; /* Reset margin for mobile */
-        margin-top: 10px; /* Add space above the logout button */
+        margin-left: 0; 
+        margin-top: 10px; 
     }
 
     .logout-button {
-        width: 100%; /* Full width for the logout button */
-        justify-content: center; /* Center the text and icon */
+        width: 100%; 
+        justify-content: center; 
     }
 }
 
@@ -439,9 +417,75 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     -ms-transform: translateY(-10px) rotate(-45deg);
     transform: translateY(-10px) rotate(-45deg);
 }
-
 /*------------------------------------*\
-    Hero Area
+	Footer
+\*------------------------------------*/
+
+#bottom-footer {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #EBEBEB;
+}
+
+/* -- Footer Logo -- */
+.footer-logo  .logo {
+	margin-top: 20px;
+	display: inline-block;
+}
+
+.footer-logo  .logo > img {
+	max-height:60px;
+}
+
+/* -- Footer Nav -- */
+.footer-nav {
+	text-align: right;
+	padding: 20px 0px;
+}
+
+.footer-nav li {
+	display:inline-block;
+	margin-left:15px
+}
+
+.footer-nav li a {
+	display:block;
+	text-transform:uppercase;
+	-webkit-transition:0.2s color;
+	transition:0.2s color;
+}
+
+.footer-nav li a:hover , .footer-nav li a:focus {
+	color:#FF6700;
+}
+
+.footer-nav li a:after {
+	content:"";
+	display:block;
+	height:2px;
+	background-color:#FF6700;
+	width:100%;
+	-webkit-transform: translateY(5px);
+	    -ms-transform: translateY(5px);
+	        transform: translateY(5px);
+	opacity:0;
+	-webkit-transition:0.2s all;
+	transition:0.2s all;
+}
+
+.footer-nav li a:hover:after , .footer-nav li a:focus:after {
+	-webkit-transform: translateY(0px);
+	    -ms-transform: translateY(0px);
+	        transform: translateY(0px);
+	opacity:1;
+}
+
+/* -- Footer copyright -- */
+.footer-copyright {
+	line-height:40px;
+}
+/*------------------------------------*\
+    Home Page
 \*------------------------------------*/
 .hero-area {
     position: relative;
@@ -485,9 +529,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     color: rgba(235, 235, 235, 0.25);
 }
 /*------------------------------------*\
-	About & Why Us (Feature)
+	Club Profile
 \*------------------------------------*/
-/* -- Feature -- */
 .feature {
 	position:relative;
 }
@@ -510,9 +553,9 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	color:#FF6700;
 }
 
-
-
-/* -- About Img -- */
+/*------------------------------------*\
+	Home Page
+\*------------------------------------*/
 .about-img {
 	margin-top:40px;
 }
@@ -521,19 +564,18 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	width:100%;
 }
 
-/* -- About Video -- */
-.about-video {
+.about-ksu {
 	position: relative;
 	display: block;
 	border-radius: 4px;
 	overflow: hidden;
 }
 
-.about-video > img {
+.about-ksu > img {
 	width:100%;
 }
 
-.about-video .play-icon {
+.about-ksu .play-icon {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -554,7 +596,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	transition:0.2s color;
 }
 
-.about-video:hover .play-icon {
+.about-ksu:hover .play-icon {
 	color:#FF6700;
 }
 
@@ -580,7 +622,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	}
 }
 
-.about-video:after {
+.about-ksu:after {
 	content:"";
 	position:absolute;
 	left:0;
@@ -695,125 +737,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	margin-top:40px;
 }
 
-/*------------------------------------*\
-	Footer
-\*------------------------------------*/
-
-#bottom-footer {
-	margin-top: 20px;
-	padding-top: 20px;
-	border-top: 1px solid #EBEBEB;
-}
-
-/* -- Footer Logo -- */
-.footer-logo  .logo {
-	margin-top: 20px;
-	display: inline-block;
-}
-
-.footer-logo  .logo > img {
-	max-height:60px;
-}
-
-/* -- Footer Nav -- */
-.footer-nav {
-	text-align: right;
-	padding: 20px 0px;
-}
-
-.footer-nav li {
-	display:inline-block;
-	margin-left:15px
-}
-
-.footer-nav li a {
-	display:block;
-	text-transform:uppercase;
-	-webkit-transition:0.2s color;
-	transition:0.2s color;
-}
-
-.footer-nav li a:hover , .footer-nav li a:focus {
-	color:#FF6700;
-}
-
-.footer-nav li a:after {
-	content:"";
-	display:block;
-	height:2px;
-	background-color:#FF6700;
-	width:100%;
-	-webkit-transform: translateY(5px);
-	    -ms-transform: translateY(5px);
-	        transform: translateY(5px);
-	opacity:0;
-	-webkit-transition:0.2s all;
-	transition:0.2s all;
-}
-
-.footer-nav li a:hover:after , .footer-nav li a:focus:after {
-	-webkit-transform: translateY(0px);
-	    -ms-transform: translateY(0px);
-	        transform: translateY(0px);
-	opacity:1;
-}
-
-/* -- Footer copyright -- */
-.footer-copyright {
-	line-height:40px;
-}
-
-/* -- Footer Social -- */
-.footer-social {
-	text-align:right;
-}
-
-.footer-social li {
-	display:inline-block;
-	margin-left:10px;
-}
-
-.footer-social li a {
-	display:block;
-	width:40px;
-	height:40px;
-	line-height:40px;
-	text-align:center;
-	border-radius:50%;
-	color:#FFF;
-	background-color:#EBEBEB;
-	-webkit-transition:0.2s opacity;
-	transition:0.2s opacity;
-}
-
-.footer-social li a.facebook {
-	background-color:#3b5998;
-}
-
-.footer-social li a.twitter {
-	background-color:#55acee;
-}
-
-.footer-social li a.google-plus {
-	background-color:#dd4b39;
-}
-
-.footer-social li a.instagram {
-	background-color:#e95950;
-}
-
-.footer-social li a.youtube {
-	background-color:#ff0000;
-}
-
-.footer-social li a.linkedin {
-	background-color:#007bb5;
-}
-
-/*------------------------------------*\
-	Blog Page
-\*------------------------------------*/
-/* -- Single Blog -- */
 .single-club {
 	margin-bottom:40px;
 	text-align: center;
@@ -954,9 +877,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	margin-right:15px;
 }
 
-/*------------------------------------*\
-	Blog Page Sidebar
-\*------------------------------------*/
+/*-- clubs side bar --*/
 .widget + .widget {
 	margin-top:40px;
 }
@@ -1077,145 +998,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 }
 
 /*------------------------------------*\
-	Single Post Page
-\*------------------------------------*/
-/* --- Blog Post Meta --- */
-.club-post-meta {
-	margin-top:40px;
-}
-
-.club-post-meta li {
-	display:inline-block;
-}
-
-.club-post-meta li + li {
-	margin-left:15px;
-}
-
-.club-post-meta li , .club-post-meta li > a {
-	color: rgba(255, 255, 255, 0.8);
-}
-
-.club-post-meta .club-meta-author > a {
-	color: #FF6700;
-}
-
-/* --- Blog Share --- */
-.club-share {
-	border-top: 1px solid #EBEBEB;
-	padding-top: 10px;
-	margin-top: 40px;
-}
-
-.club-share > h4 {
-	display:inline-block;
-	margin:0;
-}
-
-.club-share a  {
-	display:inline-block;
-	margin-left:10px;
-	width:40px;
-	height:40px;
-	line-height:40px;
-	text-align:center;
-	color:#FFF;
-	background-color:#EBEBEB;
-	border-radius:50%;
-	-webkit-transition:0.2s opacity;
-	transition:0.2s opacity;
-}
-
-.club-share a.facebook {
-	background-color:#3b5998;
-}
-
-.club-share a.twitter {
-	background-color:#55acee;
-}
-
-.club-share a.google-plus {
-	background-color:#dd4b39;
-}
-
-/* --- Blog Comments --- */
-.club-comments {
-	margin-top:40px;
-}
-
-.club-comments .media {
-	margin-top:20px;
-	margin-bottom:20px;
-}
-
-.club-comments .media .media {
-	margin-left:20px;
-}
-
-.club-comments .media .media:nth-last-child(1) {
-	margin-bottom:0px;
-}
-
-.club-comments .media .media-body {
-	padding:20px;
-	background-color:#EBEBEB;
-	border-radius:0px 4px 4px;
-}
-
-.club-comments .media .media-left:before {
-	content:"";
-	position:absolute;
-	right:0;
-	top:0;
-	border-style: solid;
-	border-width: 0px 15px 15px;
-	border-color: transparent #EBEBEB transparent transparent;
-}
-
-.club-comments .media-left {
-	position:relative;
-	padding-right:20px;
-}
-
-.club-comments .media-left img {
-	width:80px;
-	height:80px;
-	background-color:#EBEBEB;
-	border-radius:50%;
-}
-
-.club-comments .media .date-reply {
-	font-size:12px;
-	text-transform:uppercase;
-	color:#374050;
-}
-.club-comments .media .date-reply .reply {
-	margin-left:15px;
-}
-
-/* --- Blog Reply Form --- */
-.club-reply-form {
-	margin-top:40px;
-}
-
-.club-reply-form .input {
-	margin-bottom:20px;
-}
-
-.club-reply-form .input.name-input , .club-reply-form .input.email-input {
-	width: calc(50% - 10px);
-	float:left;
-}
-
-.club-reply-form .input.email-input {
-	margin-left: 20px;
-}
-
-.club-reply-form textarea {
-	height:90px;
-}
-
-/*------------------------------------*\
 	Responsive
 \*------------------------------------*/
 @media only screen and (max-width: 991px) {
@@ -1228,7 +1010,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 		margin-top:40px;
 	}
 	
-	.about-video {
+	.about-ksu {
 		margin-top:40px;
 	}
 	
