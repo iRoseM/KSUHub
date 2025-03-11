@@ -27,10 +27,25 @@
     <style>
         /* RTL Support */
         body {
-            /* direction: rtl; */
             text-align: right;
             background-color: #f8f9fa;
         }
+
+        .hero-area {
+    height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero-area .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
         /* Form Container */
         .edit-profile-container {
