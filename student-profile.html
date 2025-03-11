@@ -25,11 +25,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
 
     <style> 
-   /* Ensure RTL Layout */
 body {
-    /* direction: rtl; */
     text-align: right;
-    background-color: #f8f9fa; /* Light background for better contrast */
 }
 
 /* Hero Section */
@@ -42,7 +39,6 @@ body {
     text-align: center;
 }
 
-/* Ensuring h1 stays centered */
 .hero-area .container {
     position: absolute;
     top: 50%;
@@ -55,10 +51,9 @@ body {
     margin-top: 50px;
 }
 
-/* Make profile and form the same height */
 .profile-container .row {
     display: flex;
-    align-items: stretch; /* Ensures both divs stretch to the same height */
+    align-items: stretch; 
 }
 
 /* Profile Card & Volunteer Form */
@@ -67,8 +62,8 @@ body {
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    flex-grow: 1; /* Makes both divs grow equally */
-    min-height: 100%; /* Ensures equal height */
+    flex-grow: 1; 
+    min-height: 100%; 
 }
 
 .profile-card {
@@ -76,19 +71,18 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    justify-content: space-between; /* Distributes content evenly */
+    justify-content: space-between; 
     padding: 25px;
 }
 
 .profile-card .profile-content {
-    flex-grow: 1; /* Allows content to take full height */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centers content inside */
+    justify-content: center; 
     align-items: center;
 }
 
-/* Profile Image */
 .profile-img {
     width: 100px; 
     height: 100px;
@@ -116,30 +110,30 @@ body {
 .edit-profile-btn {
     background-color: #FF6700;
     color: white;
-    padding: 10px;
+    padding: 12px 0;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
-    width: 90%;
-    margin-top: auto;
+    font-size: 16px;
+    width: 100%; 
+    max-width: 500px; 
+    text-align: center;
+    margin-top: 15px; 
 }
 
 .edit-profile-btn:hover {
     background-color: #d55a00;
 }
 
-/* Volunteer Form Styling */
 .volunteer-form .form-group {
     margin-bottom: 15px;
 }
 
-/* Larger Inputs */
 .volunteer-form select, 
 .volunteer-form input,
 .volunteer-form textarea {
     width: 100%;
-    padding: 14px; /* Increased padding for better readability */
+    padding: 14px; 
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -149,7 +143,7 @@ body {
 /* Larger Textarea */
 textarea {
     height: 120px;
-    resize: vertical; /* Allows vertical resizing */
+    resize: vertical; 
 }
 
 /* Submit Button */
@@ -168,12 +162,6 @@ textarea {
     background-color: #d55a00;
 }
 
-/* Hide extra form fields initially */
-#extra-fields {
-    display: none;
-}
-
-/* Volunteer Log */
 .volunteer-log {
     background: white;
     padding: 25px;
@@ -188,7 +176,6 @@ textarea {
     text-align: center;
 }
 
-/* Center Table Headers */
 .volunteer-log th {
     background-color: #FF6700;
     color: white;
@@ -256,7 +243,8 @@ textarea {
             </nav>
         </div>
     </header>
-    
+
+    <div style="direction: rtl;">
     <!-- Hero Area -->
     <div class="hero-area section">
         <div class="bg-image bg-parallax overlay" style="background-image:url(./img/std-profile-background.png); background-size: contain; background-position: center; background-repeat: no-repeat; height: 80vh; width: 100%;"></div>
@@ -277,7 +265,7 @@ textarea {
                     <p><strong>البريد الإلكتروني:</strong> student@student.ksu.edu.sa</p>
                     <p><strong>الكلية:</strong> كلية علوم الحاسب</p>
                     <p><strong>المستوى الدراسي:</strong> المستوى الخامس</p>
-                    <p><strong>نبذة:</strong> طالب مهتم بالذكاء الاصطناعي</p>
+                    <p><strong>نبذة:</strong> طالبة مهتمة بالذكاء الاصطناعي وتعلم الآلة، شغوفة بتحليل البيانات وتطوير الحلول الذكية. أطمح لتوظيف التقنية في ابتكار مشاريع مؤثرة، وأستمتع باستكشاف خوارزميات التعلم العميق وتطبيقاتها في مختلف المجالات.</p>
                     <form action="student-edit.html" method="get">
                         <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button>
                     </form>
@@ -360,7 +348,7 @@ textarea {
         </div>
 
     </div>
-    
+</div>
 
     <!-- Footer -->
 		<footer id="footer" class="section">
