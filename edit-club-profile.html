@@ -27,7 +27,6 @@
     <style> 
    /* Ensure RTL Layout */
 body {
-    /* direction: rtl; */
     text-align: right;
     background-color: #f8f9fa; /* Light background for better contrast */
 }
@@ -72,12 +71,9 @@ body {
 }
 
 .profile-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    align-items: center; /* Center content horizontally */
     text-align: center;
-    justify-content: space-between; /* Distributes content evenly */
-    padding: 25px;
+    justify-content: space-between; /* Pushes elements apart */
 }
 
 .profile-card .profile-content {
@@ -90,39 +86,30 @@ body {
 
 /* Profile Image */
 .profile-img {
-    width: 100px; 
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.profile-card h3 {
-    margin: 10px 0;
-    font-size: 18px; 
-    font-weight: bold;
-}
-
+/* Centered Profile Text */
+.profile-card h3, 
 .profile-card p {
     margin: 5px 0;
-    font-size: 14px;
-    color: #555;
+    width: 100%; /* Ensure text takes full width */
 }
 
-.profile-card p strong {
-    font-weight: bold;
-    color: #333;
-}
-
+/* Edit Profile Button - Make it Fit Nicely */
 .edit-profile-btn {
     background-color: #FF6700;
     color: white;
-    padding: 10px;
+    padding: 12px 20px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
-    width: 90%;
-    margin-top: auto;
+    font-size: 16px;
+    width: 100%;
+    margin-top: auto; /* Push button to the bottom */
 }
 
 .edit-profile-btn:hover {
@@ -168,10 +155,7 @@ textarea {
     background-color: #d55a00;
 }
 
-/* Hide extra form fields initially */
-#extra-fields {
-    display: none;
-}
+
 
 /* Volunteer Log */
 .volunteer-log {
@@ -250,7 +234,7 @@ textarea {
                 <ul class="main-menu nav navbar-nav navbar-right">
                     <li><a href="home.html">الصفحة الرئيسية</a></li>
                     <li><a href="clubs.html"> النوادي</a></li>
-                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                    <li><a href="edit-club-profile.html">الملف الشخصي</a></li>
                     <li><a href="contact.html">تواصل معنا</a></li>
                 </ul>
             </nav>
@@ -261,7 +245,7 @@ textarea {
     <div class="hero-area section">
         <div class="bg-image bg-parallax overlay" style="background-image:url(./img/std-profile-background.png); background-size: contain; background-position: center; background-repeat: no-repeat; height: 80vh; width: 100%;"></div>
         <div class="container text-center">
-            <h1 class="white-text">ملف الطالب</h1>
+            <h1 class="white-text">ملف النادي</h1>
         </div>
     </div>
 
@@ -272,14 +256,15 @@ textarea {
             <!-- Profile Card: Right Side -->
             <div class="col-md-4">
                 <div class="profile-card">
-                    <img src="img/profileIcon.png" class="profile-img" alt="Student Picture">
-                    <h3>اسم الطالب</h3>
+                    <img src="img/ClubLogo.png" class="profile-img" alt="Student Picture">
+                    <h3>النادي الثقافي والاجتماعي</h3>
                     <p><strong>البريد الإلكتروني:</strong> student@student.ksu.edu.sa</p>
                     <p><strong>الكلية:</strong> كلية علوم الحاسب</p>
-                    <p><strong>المستوى الدراسي:</strong> المستوى الخامس</p>
-                    <p><strong>نبذة:</strong> طالب مهتم بالذكاء الاصطناعي</p>
-                    <form action="student-edit.html" method="get">
-                        <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button>
+                    <p><strong>الرؤية:</strong> رؤية النادي</p>
+                    <form action="edit-profile.html" method="get">
+                        <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button> <br> <br>
+                        <button type="submit" class="edit-profile-btn">حذف النادي </button>
+
                     </form>
                 </div>
             </div>
@@ -287,82 +272,34 @@ textarea {
             <!-- Volunteer Form: Left Side -->
             <div class="col-md-8">
                 <div class="volunteer-form">
-                    <h3>إضافة الساعات التطوعية</h3>
+                    <h3>إضافة فعالية للنادي</h3>
                     <form>
-                        <div class="form-group">
-                            <label for="committee">اللجنة:</label>
-                            <select class="form-control" id="committee" required>
-                                <option value="" disabled selected>اختر اللجنة</option>
-                                <option value="HR">لجنة الموارد البشرية</option>
-                                <option value="Marketing">لجنة التسويق</option>
-                                <option value="Logistics">لجنة اللوجستيات</option>
-                                <option value="IT">لجنة التقنية</option>
-                            </select>
-                        </div>
+                       
 
-                        <div class="form-group">
-                            <label for="hours">عدد الساعات:</label>
-                            <input type="number" class="form-control" id="hours" min="1" required>
+                        <div id="extra-fields">
+                            <div class="form-group">
+                                <label for="hours">أسم الفعالية:</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="date">التاريخ:</label>
+                                <input type="date" class="form-control" id="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workDescription">تفاصيل الفعالية:</label>
+                                <textarea class="form-control" id="workDescription" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn main-button">إضافة </button>
                         </div>
-                        <div class="form-group">
-                            <label for="date">التاريخ:</label>
-                            <input type="date" class="form-control" id="date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="workDescription">تفاصيل العمل:</label>
-                            <textarea class="form-control" id="workDescription" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn main-button">إضافة الساعات</button>
                     </form>
                 </div>
             </div>
         </div>
 
     
-        <!-- Volunteer Hours Log -->
-        <div class="volunteer-log">
-            <h3>سجل الساعات التطوعية</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>اللجنة</th>
-                        <th>التفاصيل</th>
-                        <th>الساعات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-03-09</td>
-                        <td>التدريب</td>
-                        <td>تقديم محاضرة توعوية</td>
-                        <td>3</td>
-                    </tr>
-                    <tr>
-                        <td>2025-03-05</td>
-                        <td>اللوجستيات</td>
-                        <td>تنظيم وترتيب الفعاليات</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>2025-02-28</td>
-                        <td>التسويق</td>
-                        <td>إعداد منشورات تسويقية</td>
-                        <td>2</td>
-                    </tr>
-                </tbody>
-            </table>
 
-            <!-- Total Volunteer Hours -->
-            <div class="text-center" style="padding-top: 10px;">
-                <h3>إجمالي الساعات التطوعية: <span id="totalHours">10</span> ساعات</h3>
-            </div>
-        </div>
-
-    </div>
     
-
-    <!-- Footer -->
+		<!-- Footer -->
 		<footer id="footer" class="section">
 			<div class="container">
 				<div class="row">
@@ -399,12 +336,15 @@ textarea {
 				</div>
 			</div>
 		</footer>
-		<div id='preloader'><div class='preloader'></div></div>
+
 
 		<!-- jQuery Plugins -->
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
+
+
+       
             
 </body>
 </html>
