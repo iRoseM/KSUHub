@@ -568,13 +568,13 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 /*------------------------------------*\
 	Courses
 \*------------------------------------*/
-.course {
+.club {
 	margin-top:20px;
 	margin-bottom:20px;
 	text-align: center;
 }
 
-.course .course-img {
+.club .club-img {
 	position: relative;
 	display:block;
 	margin-bottom:20px;
@@ -584,11 +584,11 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 }
 
-.course .course-img > img {
+.club .club-img > img {
 	width:100%;
 }
 
-.course-img:after {
+.club-img:after {
 	content:"";
 	position:absolute;
 	left:0;
@@ -603,11 +603,11 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	transition:0.2s opacity;
 }
 
-.course .course-img:hover:after {
+.club .club-img:hover:after {
 	opacity:0.7;
 }
 
-.course .course-img .course-link-icon {
+.club .club-img .club-link-icon {
 	position:absolute;
 	left:50%;
 	top:50%;
@@ -627,38 +627,38 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	transition:0.2s all;
 }
 
-.course .course-img:hover .course-link-icon {
+.club .club-img:hover .club-link-icon {
 	-webkit-transform: translate(-50% , -50%);
 	    -ms-transform: translate(-50% , -50%);
 	        transform: translate(-50% , -50%);
 	opacity:1;
 }
 
-.course .course-title {
+.club .club-title {
 	display:block;
 	height:20px;
 }
 
-.course .course-details {
+.club .club-details {
 	margin-top: 20px;
 	padding-top: 5px;
 	border-top: 1px solid #EBEBEB;
 	font-size: 12px;
 }
 
-.course .course-details .course-price {
+.club .club-details .club-price {
 	float: right;
 }
 
-.course .course-details .course-price.course-free {
+.club .club-details .club-price.club-free {
 	color: green;
 }
 
-.course .course-details .course-price.course-premium {
+.club .club-details .club-price.club-premium {
 	color: #FF6700;
 }
 
-#courses .center-btn {
+#clubs .center-btn {
 	text-align:center;
 	margin-top:40px;
 }
@@ -822,12 +822,12 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	Blog Page
 \*------------------------------------*/
 /* -- Single Blog -- */
-.single-blog {
+.single-club {
 	margin-bottom:40px;
 	text-align: center;
 }
 
-.single-blog .blog-img > a {
+.single-club .club-img > a {
 	position:relative;
 	display:block;
 	border-radius:4px;
@@ -836,11 +836,11 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	margin-bottom: 4px;
 }
 
-.single-blog .blog-img img {
+.single-club .club-img img {
 	width:100%;
 }
 
-.single-blog .blog-img > a:after {
+.single-club .club-img > a:after {
 	content:"";
 	position:absolute;
 	left:0;
@@ -853,26 +853,26 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	transition:0.2s opacity;
 }
 
-.single-blog .blog-img > a:hover:after {
+.single-club .club-img > a:hover:after {
 	opacity:0.7;
 }
 
-.single-blog .blog-meta {
+.single-club .club-meta {
 	margin-top: 20px;
 	padding-top: 10px;
 	border-top: 1px solid #EBEBEB;
 	text-align: left;
 }
 
-.single-blog .blog-meta .blog-meta-author > a {
+.single-club .club-meta .club-meta-author > a {
 	color: #FF6700;
 }
 
-.single-blog .blog-meta .blog-meta-comments {
+.single-club .club-meta .club-meta-comments {
 	margin-left:10px;
 }
 
-.single-blog .blog-meta .blog-meta-comments > a {
+.single-club .club-meta .club-meta-comments > a {
 	color: #798696;
 }
 
@@ -1088,39 +1088,39 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	Single Post Page
 \*------------------------------------*/
 /* --- Blog Post Meta --- */
-.blog-post-meta {
+.club-post-meta {
 	margin-top:40px;
 }
 
-.blog-post-meta li {
+.club-post-meta li {
 	display:inline-block;
 }
 
-.blog-post-meta li + li {
+.club-post-meta li + li {
 	margin-left:15px;
 }
 
-.blog-post-meta li , .blog-post-meta li > a {
+.club-post-meta li , .club-post-meta li > a {
 	color: rgba(255, 255, 255, 0.8);
 }
 
-.blog-post-meta .blog-meta-author > a {
+.club-post-meta .club-meta-author > a {
 	color: #FF6700;
 }
 
 /* --- Blog Share --- */
-.blog-share {
+.club-share {
 	border-top: 1px solid #EBEBEB;
 	padding-top: 10px;
 	margin-top: 40px;
 }
 
-.blog-share > h4 {
+.club-share > h4 {
 	display:inline-block;
 	margin:0;
 }
 
-.blog-share a  {
+.club-share a  {
 	display:inline-block;
 	margin-left:10px;
 	width:40px;
@@ -1134,43 +1134,43 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	transition:0.2s opacity;
 }
 
-.blog-share a.facebook {
+.club-share a.facebook {
 	background-color:#3b5998;
 }
 
-.blog-share a.twitter {
+.club-share a.twitter {
 	background-color:#55acee;
 }
 
-.blog-share a.google-plus {
+.club-share a.google-plus {
 	background-color:#dd4b39;
 }
 
 /* --- Blog Comments --- */
-.blog-comments {
+.club-comments {
 	margin-top:40px;
 }
 
-.blog-comments .media {
+.club-comments .media {
 	margin-top:20px;
 	margin-bottom:20px;
 }
 
-.blog-comments .media .media {
+.club-comments .media .media {
 	margin-left:20px;
 }
 
-.blog-comments .media .media:nth-last-child(1) {
+.club-comments .media .media:nth-last-child(1) {
 	margin-bottom:0px;
 }
 
-.blog-comments .media .media-body {
+.club-comments .media .media-body {
 	padding:20px;
 	background-color:#EBEBEB;
 	border-radius:0px 4px 4px;
 }
 
-.blog-comments .media .media-left:before {
+.club-comments .media .media-left:before {
 	content:"";
 	position:absolute;
 	right:0;
@@ -1180,46 +1180,46 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	border-color: transparent #EBEBEB transparent transparent;
 }
 
-.blog-comments .media-left {
+.club-comments .media-left {
 	position:relative;
 	padding-right:20px;
 }
 
-.blog-comments .media-left img {
+.club-comments .media-left img {
 	width:80px;
 	height:80px;
 	background-color:#EBEBEB;
 	border-radius:50%;
 }
 
-.blog-comments .media .date-reply {
+.club-comments .media .date-reply {
 	font-size:12px;
 	text-transform:uppercase;
 	color:#374050;
 }
-.blog-comments .media .date-reply .reply {
+.club-comments .media .date-reply .reply {
 	margin-left:15px;
 }
 
 /* --- Blog Reply Form --- */
-.blog-reply-form {
+.club-reply-form {
 	margin-top:40px;
 }
 
-.blog-reply-form .input {
+.club-reply-form .input {
 	margin-bottom:20px;
 }
 
-.blog-reply-form .input.name-input , .blog-reply-form .input.email-input {
+.club-reply-form .input.name-input , .club-reply-form .input.email-input {
 	width: calc(50% - 10px);
 	float:left;
 }
 
-.blog-reply-form .input.email-input {
+.club-reply-form .input.email-input {
 	margin-left: 20px;
 }
 
-.blog-reply-form textarea {
+.club-reply-form textarea {
 	height:90px;
 }
 
@@ -1303,22 +1303,22 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 @media only screen and (max-width: 480px) {
 	/*-- Courses --*/
-	#courses-wrapper [class*='col-xs'] {
+	#clubs-wrapper [class*='col-xs'] {
 		width:100%;
 	}
 	
 	/*-- Blog Comments --*/
-	.blog-comments .media .media {
+	.club-comments .media .media {
 		margin-left:0px;
 	}
 	
 	/*-- Blog Reply Form --*/
-	.blog-reply-form .input.name-input , .blog-reply-form .input.email-input {
+	.club-reply-form .input.name-input , .club-reply-form .input.email-input {
 		width: 100%;
 		float:none;
 	}
 	
-	.blog-reply-form .input.email-input {
+	.club-reply-form .input.email-input {
 		margin-left: 0px;
 	}
 }
