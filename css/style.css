@@ -211,6 +211,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 \*------------------------------------*/
 .navbar-brand {
     padding: 0;
+	margin-left: 50px;
+
 }
 
 .navbar-brand .logo {
@@ -231,6 +233,9 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 /*------------------------------------*\
 	Navigation
 \*------------------------------------*/
+.head-container{
+	margin-right: 0px;
+}
 #header {
 	position:relative;
 	left:0;
@@ -299,7 +304,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
     border-radius: 5px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     font-size: 14px;
     font-weight: 500;
     transition: background-color 0.3s ease;
@@ -311,152 +316,173 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 /* -- Mobile Nav -- */
 @media only screen and (max-width: 767px) {
-	#nav {
-		position: fixed;
-		top: 0;
-		right: 0;
-		width: 0%;
-		max-width:250px;
-		height: 100vh;
-		background: #FFF;
-		-webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
-		        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
-		padding-top: 80px;
-		padding-bottom: 40px;
-		-webkit-transform: translateX(100%);
-		    -ms-transform: translateX(100%);
-		        transform: translateX(100%);
-		-webkit-transition: 0.4s all cubic-bezier(.77,0,.18,1);
-		transition: 0.4s all cubic-bezier(.77,0,.18,1);
-		z-index:9;
-	}
+    #nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 0%;
+        max-width: 250px;
+        height: 100vh;
+        background: #FFF;
+        -webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
+        padding-top: 80px;
+        padding-bottom: 40px;
+        -webkit-transform: translateX(100%);
+        -ms-transform: translateX(100%);
+        transform: translateX(100%);
+        -webkit-transition: 0.4s all cubic-bezier(.77, 0, .18, 1);
+        transition: 0.4s all cubic-bezier(.77, 0, .18, 1);
+        z-index: 9;
+    }
 
-	#header.nav-collapse #nav{
-		width:100%;
-		-webkit-transform: translateX(0%);
-		    -ms-transform: translateX(0%);
-		        transform: translateX(0%);
-	}
-	
-	.main-menu {
-		margin:0;
-	}
-	
-	.main-menu li a {
-		color: #374050 !important;
-		display: inline-block;
-		margin-left: 40px;
-	}
+    #header.nav-collapse #nav {
+        width: 100%;
+        -webkit-transform: translateX(0%);
+        -ms-transform: translateX(0%);
+        transform: translateX(0%);
+    }
+
+    .main-menu {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the left */
+        gap: 10px; /* Add space between stacked items */
+        margin: 0;
+        padding: 0 20px; /* Add padding for better spacing */
+    }
+
+    .main-menu li {
+        width: 100%; /* Ensure full width for each item */
+    }
+
+    .main-menu li a {
+        color: #374050 !important;
+        display: block; /* Make links block-level for better click area */
+        padding: 10px 0; /* Add padding for better spacing */
+        margin-left: 0; /* Remove left margin */
+    }
+
+    .logout-item {
+        margin-left: 0; /* Reset margin for mobile */
+        margin-top: 10px; /* Add space above the logout button */
+    }
+
+    .logout-button {
+        width: 100%; /* Full width for the logout button */
+        justify-content: center; /* Center the text and icon */
+    }
 }
 
 /* -- Mobile Toggle Btn -- */
 .navbar-toggle {
-	position:fixed;
-	right:0;
-	padding: 0;
-	height: 40px;
-	width: 40px;
-	margin-top: 5px;
-	z-index:99;
+    position: fixed;
+    right: 0;
+    padding: 0;
+    height: 40px;
+    width: 40px;
+    margin-top: 5px;
+    z-index: 99;
 }
 
 .navbar-toggle > span {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-    -webkit-transform: translate(-50% , -50%);
-        -ms-transform: translate(-50% , -50%);
-            transform: translate(-50% , -50%);
-	-webkit-transition: 0.2s background;
-	transition: 0.2s background;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-transition: 0.2s background;
+    transition: 0.2s background;
 }
 
-.navbar-toggle > span:before, .navbar-toggle > span:after {
-	content: '';
-	position:absolute;
-	left:0;
-	-webkit-transition: 0.2s -webkit-transform;
-	transition: 0.2s -webkit-transform;
-	transition: 0.2s transform;
-	transition: 0.2s transform, 0.2s -webkit-transform;
+.navbar-toggle > span:before,
+.navbar-toggle > span:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    -webkit-transition: 0.2s -webkit-transform;
+    transition: 0.2s -webkit-transform;
+    transition: 0.2s transform;
+    transition: 0.2s transform, 0.2s -webkit-transform;
 }
 
-.navbar-toggle > span , .navbar-toggle > span:before , .navbar-toggle > span:after {
-	height: 2px;
-	width: 25px;
-	background-color:#374050;
+.navbar-toggle > span,
+.navbar-toggle > span:before,
+.navbar-toggle > span:after {
+    height: 2px;
+    width: 25px;
+    background-color: #374050;
 }
 
 .navbar-toggle > span:before {
-	top: -10px;
+    top: -10px;
 }
 
 .navbar-toggle > span:after {
-	top: 10px;
+    top: 10px;
 }
 
 #header.nav-collapse .navbar-toggle > span {
-	background: transparent;
+    background: transparent;
 }
 
 #header.nav-collapse .navbar-toggle > span:before {
     -webkit-transform: translateY(10px) rotate(45deg);
-        -ms-transform: translateY(10px) rotate(45deg);
-            transform: translateY(10px) rotate(45deg);
+    -ms-transform: translateY(10px) rotate(45deg);
+    transform: translateY(10px) rotate(45deg);
 }
 
 #header.nav-collapse .navbar-toggle > span:after {
     -webkit-transform: translateY(-10px) rotate(-45deg);
-        -ms-transform: translateY(-10px) rotate(-45deg);
-            transform: translateY(-10px) rotate(-45deg);
+    -ms-transform: translateY(-10px) rotate(-45deg);
+    transform: translateY(-10px) rotate(-45deg);
 }
 
-
 /*------------------------------------*\
-	Hero Area
+    Hero Area
 \*------------------------------------*/
 .hero-area {
-	position:relative;
-	padding-top: 80px;
-	padding-bottom: 80px;
+    position: relative;
+    padding-top: 80px;
+    padding-bottom: 80px;
 }
 
 #home.hero-area {
-	height:calc(100vh - 80px);
-	padding-top: 0px;
-	padding-bottom: 0px;
+    height: calc(100vh - 80px);
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .home-wrapper {
-	position:absolute;
-	top:50%;
-	-webkit-transform:translateY(-50%);
-	    -ms-transform:translateY(-50%);
-	        transform:translateY(-50%);
-	left:0;
-	right:0;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 0;
+    right: 0;
 }
 
 /* -- Breadcrumb -- */
 .hero-area-tree li {
-	display:inline-block;
-	font-family: 'Lato', sans-serif;
-	font-weight:600;
-	font-size:14px;
-	color:rgba(255, 255, 255, 0.8);
+    display: inline-block;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .hero-area-tree li > a {
-	color:rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .hero-area-tree li + li:before {
-	content: "/";
-	display: inline-block;
-	margin: 0px 5px;
-	color: rgba(235, 235, 235, 0.25);
+    content: "/";
+    display: inline-block;
+    margin: 0px 5px;
+    color: rgba(235, 235, 235, 0.25);
 }
-
 /*------------------------------------*\
 	About & Why Us (Feature)
 \*------------------------------------*/
@@ -775,46 +801,6 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 .footer-social li a.linkedin {
 	background-color:#007bb5;
-}
-
-/*------------------------------------*\
-	Contact Page
-\*------------------------------------*/
-/* -- Contact Form -- */
-.contact-form:after {
-	content:"";
-	display:block;
-	clear:both;
-}
-
-.contact-form .input {
-	margin-bottom:20px;
-}
-
-.contact-form textarea.input {
-	height:200px;
-}
-
-/* -- Contact Information -- */
-.contact-details li  {
-	margin-bottom:20px;
-}
-
-.contact-details li i {
-	color: #FF6700;
-	margin-right: 15px;
-	border: 1px solid #EBEBEB;
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-	line-height: 40px;
-	text-align: center;
-}
-
-/* -- Contact Map -- */
-#contact-map {
-	height:260px;
-	border-radius:4px;
 }
 
 /*------------------------------------*\
