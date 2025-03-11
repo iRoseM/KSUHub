@@ -55,6 +55,7 @@ a {
 	font-family: 'Noto Kufi Arabic', sans-serif;
 	color: #374050;
 	font-weight: 700;
+	pointer-events: auto;
 }
 
 a:hover,
@@ -609,6 +610,12 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 }
 
+.clubs-clubimg{
+	pointer-events: auto;
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+}
 .club .club-img > img {
 	width:100%;
 }
