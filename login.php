@@ -1,56 +1,62 @@
 <?php
-    
-    session_start();
-    //1. connect to DB
-    $conn = mysqli_connect("localhost", "root", "root", "KSUHub", 8889);
-    
-    //2. check connection error
-    if(mysqli_connect_error() != null){
-        echo '<p>Error! cant connect to database</p>';
-        die(mysqli_connect_errno());
-    }
-    
-    // Validate Input
-if (empty($_POST['email']) || empty($_POST['password']) || empty($_POST['role'])) {
-    echo "<script>alert('جميع الحقول مطلوبة!'); window.history.back();</script>";
-    exit();
-}
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    // Get and sanitize inputs
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+session_start();
+include 'db_connection.php'; // Ensure this file properly connects to your database
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve form data
+    $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];
 
-    // Determine Table Based on Role
-    $table = ($role == "student") ? "StudentUser" : "AdminUser";
-
-    // 3. Query: Check if Email Exists
-    $sql = "SELECT * FROM $table WHERE email = '$email'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) == 0) {
-        echo "<script>alert('البريد الإلكتروني غير مسجل!'); window.history.back();</script>";
+    // Validate email format (optional, since HTML already validates it)
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('البريد الإلكتروني غير صالح'); window.location.href = 'login.html';</script>";
         exit();
     }
 
-    // Verify Password
-    $row = mysqli_fetch_assoc($result);
-    if (!password_verify($password, $row['password'])) {
-        echo "<script>alert('كلمة المرور غير صحيحة!'); window.history.back();</script>";
+    // Determine the table based on the role
+    $table = ($role == "student") ? "studentuser" : "adminuser"; // Adjust table names as needed
+
+    // Fetch user data from the database
+    $stmt = $conn->prepare("SELECT * FROM $table WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+
+        // Verify the password
+        if (password_verify($password, $user['password'])) {
+            // Set session variables
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_role'] = $role;
+
+            // Redirect based on role
+            if ($role == "student") {
+                header("Location: student-profile.html");
+            } else {
+                header("Location: club-profile-admin.html");
+            }
+            exit();
+        } else {
+            // Incorrect password
+            echo "<script>alert('كلمة المرور غير صحيحة'); window.location.href = 'login.html';</script>";
+            exit();
+        }
+    } else {
+        // User not found
+        echo "<script>alert('البريد الإلكتروني غير مسجل'); window.location.href = 'login.html';</script>";
         exit();
     }
+}
 
-    // Start User Session
-    $_SESSION['email'] = $email;
-    $_SESSION['role'] = $role;
-    $_SESSION['fullName'] = $row['fullName'];
-
-    echo "<script>alert('تم تسجيل الدخول بنجاح!'); window.location.href='dashboard.php';</script>";
-
-    // 5. Close Connection
-    mysqli_close($conn);
-    ?>
-
+// If the script reaches here, it means the request method is not POST
+// Do not display any error message or redirect
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -108,7 +114,7 @@ if (empty($_POST['email']) || empty($_POST['password']) || empty($_POST['role'])
                 <div class="col-md-6">
                     <div class="log-login-box">
                         <h2 class="log-white-text text-center" style="text-align: center;"> KSUHub تســجيل الدخول إلى</h2>
-                        <form action="dashboard.html" method="POST">
+                        <form action="login.php" method="POST">
                             <div class="log-form-group">
                                 <!-- Email -->
                             <div class="log-form-group">
@@ -140,7 +146,7 @@ if (empty($_POST['email']) || empty($_POST['password']) || empty($_POST['role'])
                             <button type="submit" class="log-main-button log-icon-button btn-block">تســجيل الدخول</button>
                             <p class="text-center log-white-text mt-3" style="text-align: center;">
                                 لـيس لديـك حسـاب؟ 
-                                <a href="signup.php" class="log-white-text"><strong>سـجّل الآن</strong></a>
+                                <a href="signup.html" class="log-white-text"><strong>سـجّل الآن</strong></a>
                             </p>
                         </form>
                     </div>
