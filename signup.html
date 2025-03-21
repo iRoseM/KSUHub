@@ -55,55 +55,55 @@
                 <div class="col-md-6">
                     <div class="log-signup-box">
                         <h2 class="log-white-text text-center">KSUHub تســجيل حســاب</h2>
-                        <form action="dashboard.html" method="POST">
+                        <form action="signup.php" method="POST">
                             <!-- Full Name -->
                             <div class="log-form-group">
                                 <label class="log-white-text">الاسم الكامل</label>
-                                <input type="text" class="log-form-control" placeholder="أدخل الاسم الكامل" required>
+                                <input type="text" name="fullName" class="log-form-control" placeholder="أدخل الاسم الكامل" required>
                             </div>
 
                             <!-- Password -->
                             <div class="log-form-group">
                                 <label class="log-white-text">كلمة المرور</label>
-                                <input type="password" class="log-form-control" placeholder="أدخل كلمة المرور (أكثر من 8 أحرف)" minlength="8" required>
+                                <input type="password" name="password" class="log-form-control" placeholder="أدخل كلمة المرور (أكثر من 8 أحرف)" minlength="8" required>
                             </div>
 
                             <!-- Phone Number -->
                             <div class="log-form-group">
                                 <label class="log-white-text">رقم الجوال</label>
-                                <input type="tel" class="log-form-control" placeholder="أدخل رقم الجوال (يبدأ بـ 05)" pattern="05[0-9]{8}" required>
+                                <input type="tel" name="phoneNo" class="log-form-control" placeholder="أدخل رقم الجوال (يبدأ بـ 05)" pattern="05[0-9]{8}" required>
                             </div>
 
                             <!-- Email -->
                             <div class="log-form-group">
                                 <label class="log-white-text">البريد الإلكتروني</label>
-                                <input type="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني الجامعي (يبدأ بـ 4)" pattern="4.+@student\.ksu\.edu\.sa" required>
+                                <input type="email" name="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني الجامعي (يبدأ بـ 4)" pattern="4.+@student\.ksu\.edu\.sa" required>
                             </div>
 
                             <!-- College -->
                             <div class="log-form-group">
                                 <label class="log-white-text">الكليــة</label>
-                                <select class="log-form-control" required>
+                                <select name="college" class="log-form-control" required>
                                     <option value="" disabled selected>اختر الكلية</option>
-                                    <option value="engineering">كلية الحاسب وتقنية المعلومات</option>
-                                    <option value="engineering">كلية الهندسة</option>
-                                    <option value="science">كلية العلوم</option>
-                                    <option value="medicine">كلية الطب</option>
-                                    <option value="business">كلية إدارة الأعمال</option>
-                                    <option value="arts">كلية الآداب</option>
+                                    <option value="كلية الحاسب وتقنية المعلومات">كلية الحاسب وتقنية المعلومات</option>
+                                    <option value="كلية الهندسة">كلية الهندسة</option>
+                                    <option value="كلية العلوم">كلية العلوم</option>
+                                    <option value="كلية الطب">كلية الطب</option>
+                                    <option value="كلية إدارة الأعمال">كلية إدارة الأعمال</option>
+                                    <option value="كلية الآداب">كلية الآداب</option>
                                 </select>
                             </div>
 
                             <!-- Studying Level -->
                             <div class="log-form-group">
                                 <label class="log-white-text">المستوى الدراسي</label>
-                                <select class="log-form-control" required>
+                                <select name="studyingLevel" class="log-form-control" required>
                                     <option value="" disabled selected>اختر المستوى الدراسي</option>
-                                    <option value="sophomore">السنة الأولى المشتركة</option>
-                                    <option value="junior">السنة الثانية</option>
-                                    <option value="senior">السنة الثالثة</option>
-                                    <option value="graduate">السنة الرابعة</option>
-                                    <option value="junior">خريــج</option>
+                                    <option value="السنة الأولى المشتركة">السنة الأولى المشتركة</option>
+                                    <option value="السنة الثانية">السنة الثانية</option>
+                                    <option value="السنة الثالثة">السنة الثالثة</option>
+                                    <option value="السنة الرابعة">السنة الرابعة</option>
+                                    <option value="خريــج">خريــج</option>
                                 </select>
                             </div>
 

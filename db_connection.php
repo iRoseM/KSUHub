@@ -9,7 +9,7 @@ ini_set('display_errors','1');
 $servername = "localhost"; 
 $username = "root";        
 $password = "root";            // Your MySQL password (leave empty for default XAMPP)
-$database = "ksuhub";   
+$database = "ksuhubdb";   
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $database, 8889);
