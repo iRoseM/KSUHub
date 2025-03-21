@@ -9,36 +9,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $role = $_POST['role'];
+    $role = $_POST['role']; // Role: "student" or "clubAdmin"
 
-    // Validate email format (optional, since HTML already validates it)
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<script>alert('البريد الإلكتروني غير صالح'); window.location.href = 'login.html';</script>";
+    // Validate that all fields are set
+    if (empty($email) || empty($password) || empty($role)) {
+        echo "<script>alert('يرجى ملء جميع الحقول'); window.location.href = 'login.html';</script>";
         exit();
     }
 
-    // Determine the table based on the role
-    $table = ($role == "student") ? "studentuser" : "adminuser"; // Adjust table names as needed
+    // Determine the table and user type based on the selected role
+    if ($role == "student") {
+        $table = "studentuser";
+        $userType = "student";
+    } elseif ($role == "clubAdmin") {
+        $table = "adminuser";
+        $userType = "clubAdmin";
+    }
 
     // Fetch user data from the database
-    $stmt = $conn->prepare("SELECT * FROM $table WHERE email = ?");
+    $stmt = $conn->prepare("SELECT email, password FROM $table WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
+        // User found, verify password
         $user = $result->fetch_assoc();
-
-        // Verify the password
         if (password_verify($password, $user['password'])) {
-            // Set session variables
+            // Password is correct, set session variables
             $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_role'] = $role;
+            $_SESSION['user_type'] = $userType;
 
-            // Redirect based on role
-            if ($role == "student") {
+            // Redirect to the appropriate dashboard
+            if ($userType == "student") {
                 header("Location: student-profile.html");
-            } else {
+            } elseif ($userType == "clubAdmin") {
                 header("Location: club-profile-admin.html");
             }
             exit();
@@ -53,113 +58,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
-
-// If the script reaches here, it means the request method is not POST
-// Do not display any error message or redirect
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>KSUHub | تسجيل الدخول </title>
-        <!-- tab icon -->
-        <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
-
-        <!-- Bootstrap -->
-        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
-
-        <!-- Font Awesome Icon -->
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-
-        <!-- Custom stylesheet -->
-        <link type="text/css" rel="stylesheet" href="css/style.css"/>
-        <!-- Arabic font -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Baloo+Da+2:wght@400..800&family=Bebas+Neue&family=Cinzel:wght@400..900&family=Courgette&family=Noto+Kufi+Arabic:wght@100..900&family=Ovo&family=Quattrocento:wght@400;700&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    </head>
-
-    <body>
-
-        <header id="header" class="transparent-nav">
-            <div class="head-container">
-                <div class="navbar-header">
-                    <!-- Logo -->
-                    <div class="navbar-brand">
-                        <a class="logo" href="index.html">
-                            <img src="./img/logo-alt.png" alt="KSUHub Logo">
-                        </a>
-                    </div>
-
-                    <!-- Mobile toggle -->
-                    <button class="navbar-toggle">
-                        <span></span>
-                    </button>
-
-                </div>
-            </div>
-        </header>
-
-    
-    <!-- Background Image -->
-    <div class="bg-image bg-parallax overlay" style="background-image: url(./img/home-background.png);"></div>
-
-    <!-- Main Content Wrapper -->
-    <div class="home-wrapper">
-        <div class="container">
-            
-                <div class="col-md-6">
-                    <div class="log-login-box">
-                        <h2 class="log-white-text text-center" style="text-align: center;"> KSUHub تســجيل الدخول إلى</h2>
-                        <form action="login.php" method="POST">
-                            <div class="log-form-group">
-                                <!-- Email -->
-                            <div class="log-form-group">
-                                <label class="log-white-text">البريد الإلكتروني</label>
-                                 <input type="email" name="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني" pattern="4.+@student\.ksu\.edu\.sa" required>
-                            </div>
-                            </div>
-                            <div class="log-form-group">
-                                <label class="log-white-text">كلـمة المــرور</label>
-                                <input type="password" name="password" class="log-form-control" placeholder="أدخل كلمة المرور" required>
-                            </div>
-
-                            <!-- Role Selection Radio Buttons -->
-                            <div class="log-form-group">
-                                <div class="role-radio-buttons" style="text-align: center;">
-                                    <label class="radio-label">
-                                        <input type="radio" name="role" value="clubAdmin" required>
-                                        <span class="radio-custom"></span>
-                                        مسؤول نادي
-                                    </label>
-                                    <label class="radio-label">
-                                        <input type="radio" name="role" value="student" required>
-                                        <span class="radio-custom"></span>
-                                        طالب
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- <button type="submit" class="log-main-button log-icon-button btn-block">LOGIN</button> -->
-                            <button type="submit" class="log-main-button log-icon-button btn-block">تســجيل الدخول</button>
-                            <p class="text-center log-white-text mt-3" style="text-align: center;">
-                                لـيس لديـك حسـاب؟ 
-                                <a href="signup.html" class="log-white-text"><strong>سـجّل الآن</strong></a>
-                            </p>
-                        </form>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 text-content-wrapper">
-                        <h1 class="white-text" style="color: #feb47b; text-align: right;">.!أهــلًا وسهــلًا </h1>
-                        <p class="lead white-text" style="width: 400px; text-align: right; padding: 0px; margin: 0px;">
-                            سجل دخولك الآن لتستأنف رحلتك معنا. تفاعل مع زملائك، تابع الفعاليات، وكن جزءًا من مجتمع جامعي مليء بالإبداع والتميز
-                        </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
