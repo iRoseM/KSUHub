@@ -1,11 +1,21 @@
 <?php
+
+error_reporting(E_ALL); 
+ini_set('log_errors','1'); 
+ini_set('display_errors','1'); 
+
 session_start();
 include 'db_connection.php';
-
+/*
 if (!isset($_SESSION['user_email']) || $_SESSION['user_role'] != "student") {
     header("Location: login.html");
     exit();
 }
+*/
+
+// TEMP for testing (remove before final submission)
+$_SESSION['user_email'] = "student@student.ksu.edu.sa";
+$_SESSION['user_role'] = "student";
 
 $email = $_SESSION['user_email'];
 
@@ -16,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = $_POST['date'];
     $work = $_POST['workDescription'];
 
-    $query = "INSERT INTO VolunteeringHours (email, committee, totalHours, date, workDescription) VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO Volunteerhours (email, committee, totalHours, date, workDescription) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ssiss", $email, $committee, $hours, $date, $work);
     
@@ -36,7 +46,7 @@ $result = $stmt->get_result();
 $student = $result->fetch_assoc();
 
 // Fetch volunteer hours
-$volunteerQuery = "SELECT date, committee, workDescription, totalHours FROM VolunteeringHours WHERE email = ?";
+$volunteerQuery = "SELECT date, committee, workDescription, totalHours FROM Volunteerhours WHERE email = ?";
 $volunteerStmt = $conn->prepare($volunteerQuery);
 $volunteerStmt->bind_param("s", $email);
 $volunteerStmt->execute();
