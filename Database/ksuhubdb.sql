@@ -103,7 +103,8 @@ CREATE TABLE `volunteerhours` (
   `membershipID` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `totalHours` int(11) DEFAULT '0',
-  `date` date DEFAULT NULL
+  `date` date DEFAULT NULL,
+  `workDescription` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
