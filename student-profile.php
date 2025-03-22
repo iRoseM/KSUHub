@@ -19,21 +19,36 @@ $_SESSION['user_role'] = "student";
 
 $email = $_SESSION['user_email'];
 
+
 // Handle form submission (add volunteer hours)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $committee = $_POST['committee'];
     $hours = $_POST['hours'];
     $date = $_POST['date'];
     $work = $_POST['workDescription'];
 
-    $query = "INSERT INTO Volunteerhours (email, committee, totalHours, date, workDescription) VALUES (?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssiss", $email, $committee, $hours, $date, $work);
-    
-    if ($stmt->execute()) {
-        // Optional: show success message
+    // Get the student's membershipID
+    $membershipQuery = "SELECT membershipID FROM membership WHERE email = ?";
+    $membershipStmt = $conn->prepare($membershipQuery);
+    $membershipStmt->bind_param("s", $email);
+    $membershipStmt->execute();
+    $membershipResult = $membershipStmt->get_result();
+    $membership = $membershipResult->fetch_assoc();
+
+    if ($membership) {
+        $membershipID = $membership['membershipID'];
+
+        $insertQuery = "INSERT INTO volunteeringhours (membershipID, email, totalHours, date, workDescription) 
+                        VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertQuery);
+        $stmt->bind_param("isiss", $membershipID, $email, $hours, $date, $work);
+
+        if ($stmt->execute()) {
+            // Optional: redirect or success message
+        } else {
+            echo "خطأ أثناء حفظ الساعات التطوعية.";
+        }
     } else {
-        echo "خطأ أثناء حفظ الساعات التطوعية.";
+        echo "لم يتم العثور على عضويتك.";
     }
 }
 
@@ -45,8 +60,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $student = $result->fetch_assoc();
 
-// Fetch volunteer hours
-$volunteerQuery = "SELECT date, committee, workDescription, totalHours FROM Volunteerhours WHERE email = ?";
+// Fetch volunteer hours with committee info from membership table
+$volunteerQuery = "
+    SELECT v.date, m.committee, v.workDescription, v.totalHours
+    FROM volunteeringhours v
+    JOIN membership m ON v.membershipID = m.membershipID
+    WHERE v.email = ?
+";
 $volunteerStmt = $conn->prepare($volunteerQuery);
 $volunteerStmt->bind_param("s", $email);
 $volunteerStmt->execute();
