@@ -1,19 +1,16 @@
 <?php
 include_once 'db_connection.php';
-// استرجاع بيانات النادي من قاعدة البيانات
-$sql = "SELECT clubName, clubVision, image , clubAccount FROM adminuser WHERE clubID = 1"; // استبدل '1' بالـ ID المناسب للنادي
+$sql = "SELECT clubName, clubVision, image , clubAccount FROM adminuser WHERE clubID = 1"; 
 $result = $conn->query($sql);
 
-// التحقق من وجود نتائج
 if ($result->num_rows > 0) {
-    // إخراج البيانات
     $row = $result->fetch_assoc();
     $clubName = $row["clubName"];
     $clubVision = $row["clubVision"];
     $clubImage = $row["image"];
     $clubAccount = $row["clubAccount"];
 } else {
-    echo "لا توجد بيانات للنادي.";
+    echo "error";
 }
 
 $conn->close();
