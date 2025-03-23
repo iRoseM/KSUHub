@@ -1,16 +1,15 @@
 <?php
 include 'db_connection.php';
 
-// Define images for both adminuser and events
 $clubs = [
-    1 => "img/marketingclub.png",   // Example for adminuser
-    2 => "img/ClubLogo.png",     // Example for adminuser
-    3 => "img/diu.png" ,   // Example for events
-    4 => "img/ftcclub.png",   // Example for adminuser
-    5 => "img/aiclub.png",     // Example for adminuser
-    6 => "img/buisnessclub.png" ,   // Example for events
-    7 => "img/ptc.png",     // Example for adminuser
-    8 => "img/cyberclub.png"    // Example for events
+    1 => "img/marketingclub.png",   
+    2 => "img/ClubLogo.png",    
+    3 => "img/diu.png" ,  
+    4 => "img/ftcclub.png",  
+    5 => "img/aiclub.png",   
+    6 => "img/buisnessclub.png" , 
+    7 => "img/ptc.png", 
+    8 => "img/cyberclub.png"
 ];
 
 // Define the upload directory
