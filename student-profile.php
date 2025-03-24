@@ -12,16 +12,16 @@ if (!isset($_SESSION['user_email']) || $_SESSION['user_role'] != "student") {
     exit();
 }
 
-/*
-// TEMP for testing (remove before final submission)
-$_SESSION['user_email'] = "student@student.ksu.edu.sa";
-$_SESSION['user_role'] = "student";
-*/
 $email = $_SESSION['user_email'];
 
+$successMessage = "";
+if (isset($_SESSION['success_message'])) {
+    $successMessage = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
+}
 
 // Handle form submission (add volunteer hours)
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'], $_POST['workDescription'], $_POST['committee'])) {
     $hours = $_POST['hours'];
     $date = $_POST['date'];
     $work = $_POST['workDescription'];
@@ -37,16 +37,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($membership) {
         $membershipID = $membership['membershipID'];
 
-        $insertQuery = "INSERT INTO volunteeringhours (membershipID, email, totalHours, date, workDescription) 
-                        VALUES (?, ?, ?, ?, ?)";
+        $getMaxQuery = "SELECT MAX(volunteeringID) AS maxID FROM volunteeringhours";
+        $getMaxResult = $conn->query($getMaxQuery);
+        $maxIDRow = $getMaxResult->fetch_assoc();
+        $newID = $maxIDRow['maxID'] + 1;
+
+
+        $insertQuery = "INSERT INTO volunteeringhours (volunteeringID, membershipID, email, totalHours, date, workDescription) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insertQuery);
-        $stmt->bind_param("isiss", $membershipID, $email, $hours, $date, $work);
+        $stmt->bind_param("iisiss", $newID, $membershipID, $email, $hours, $date, $work);
+
 
         if ($stmt->execute()) {
-            // Optional: redirect or success message
+            // Get the new volunteeringID (manually, since it's not auto-increment)
+            $getID = $conn->query("SELECT MAX(volunteeringID) AS maxID FROM volunteeringhours");
+            $idRow = $getID->fetch_assoc();
+            $volunteeringID = $idRow['maxID'];
+        
+            // Insert into 'record' table
+            $recordQuery = "INSERT INTO record (membershipID, voulnteeringID, email) VALUES (?, ?, ?)";
+            $recordStmt = $conn->prepare($recordQuery);
+            $recordStmt->bind_param("iis", $membershipID, $newID, $email);
+
+            $recordStmt->execute();
+        
+            // Update totalHours in studentUser
+            $updateQuery = "UPDATE studentUser SET volunteeringHours = volunteeringHours + ? WHERE email = ?";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bind_param("is", $hours, $email);
+            $updateStmt->execute();
+            
+            $_SESSION['success_message'] = "تمت إضافة الساعات التطوعية بنجاح.";
+
+            // Redirect or success message
+            header("Location: student-profile.php");
+            exit();
         } else {
             echo "خطأ أثناء حفظ الساعات التطوعية.";
         }
+        
     } else {
         echo "لم يتم العثور على عضويتك.";
     }
@@ -345,7 +375,10 @@ while ($row = $volunteerResult->fetch_assoc()) {
             <!-- Profile Card: Right Side -->
             <div class="col-md-4">
                 <div class="profile-card">
-                    <img src="img/profileIcon.png" class="profile-img" alt="Student Picture"><!--not in the db-->
+                    <?php
+                    $profileImage = !empty($student['profileImg']) ? 'img/' . $student['profileImg'] : 'img/profileIcon.png';
+                    ?>
+                    <img src="<?= $profileImage ?>" class="profile-img" alt="Student Picture">
                     <?php
                     echo "<h3>" . $student['fullName'] . "</h3>";
                     echo "<p><strong>البريد الإلكتروني:</strong> " . $student['email'] . "</p>"; 
@@ -362,16 +395,33 @@ while ($row = $volunteerResult->fetch_assoc()) {
             <!-- Volunteer Form: Left Side -->
             <div class="col-md-8">
                 <div class="volunteer-form">
+                    <?php
+                        $committees = [];
+                        $committeeQuery = "SELECT DISTINCT committee FROM membership WHERE email = ?";
+                        $committeeStmt = $conn->prepare($committeeQuery);
+                        $committeeStmt->bind_param("s", $email);
+                        $committeeStmt->execute();
+                        $committeeResult = $committeeStmt->get_result();
+
+                        while ($row = $committeeResult->fetch_assoc()) {
+                            $committees[] = $row['committee'];
+                        }
+                    ?>
                     <h3>إضافة الساعات التطوعية</h3>
+                    <?php if (!empty($successMessage)): ?>
+                        <div class="alert alert-success text-center" style="margin-bottom: 20px; background-color: #dff0d8; padding: 15px; border-radius: 8px; color: #3c763d;">
+                            <?= $successMessage ?>
+                        </div>
+                    <?php endif; ?>
+
                     <form action="student-profile.php" method="post">
                         <div class="form-group">
                             <label for="committee">اللجنة:</label>
                             <select class="form-control" id="committee" name="committee" required>
                                 <option value="" disabled selected>اختر اللجنة</option>
-                                <option value="HR">لجنة الموارد البشرية</option>
-                                <option value="Marketing">لجنة التسويق</option>
-                                <option value="Logistics">لجنة اللوجستيات</option>
-                                <option value="IT">لجنة التقنية</option>
+                                <?php foreach ($committees as $committee): ?>
+                                    <option value="<?= $committee ?>"><?= $committee ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -420,7 +470,7 @@ while ($row = $volunteerResult->fetch_assoc()) {
 
             <!-- Total Volunteer Hours -->
             <div class="text-center" style="padding-top: 10px;">
-                <h3>إجمالي الساعات التطوعية: <span id="totalHours">10</span> ساعات</h3>
+            <h3>إجمالي الساعات التطوعية: <span id="totalHours"><?= $totalHours ?></span> ساعة</h3>
             </div>
         </div>
 
@@ -470,6 +520,17 @@ while ($row = $volunteerResult->fetch_assoc()) {
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
+
+        <script>
+            // إخفاء رسالة النجاح بعد 3 ثواني
+            setTimeout(function () {
+                const alert = document.querySelector('.alert-success');
+                if (alert) {
+                    alert.style.display = 'none';
+                }
+            }, 3000); 
+        </script>
+
             
 </body>
 </html>
