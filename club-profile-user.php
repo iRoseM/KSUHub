@@ -93,7 +93,7 @@ $conn->close();
                 <ul class="main-menu nav navbar-nav navbar-right">
                     <li><a href="home.html">الصفحة الرئيسية</a></li>
                     <li><a href="clubs.html"> النوادي</a></li>
-                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                    <li><a href="student-profile.php">الملف الشخصي</a></li>
                 
                     <li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
                 </ul>
@@ -235,7 +235,7 @@ $conn->close();
                 <ul class="footer-nav">
                     <li><a href="home.html">الصفحة الرئيسية</a></li>
                     <li><a href="clubs.html"> النوادي</a></li>
-                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                    <li><a href="student-profile.php">الملف الشخصي</a></li>
                     <li><a href="contact.html">تواصل معنا</a></li>
                 </ul>
             </div>

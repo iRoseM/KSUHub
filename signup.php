@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_type'] = "student";
 
         // Display success message and redirect
-        echo "<script>alert('تم تسجيل الحساب بنجاح!'); window.location.href = 'student-profile.html';</script>";
+        echo "<script>alert('تم تسجيل الحساب بنجاح!'); window.location.href = 'student-profile.php';</script>";
         exit();
     } else {
         // Handle database insertion error

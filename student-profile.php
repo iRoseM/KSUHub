@@ -6,17 +6,17 @@ ini_set('display_errors','1');
 
 session_start();
 include 'db_connection.php';
-/*
+
 if (!isset($_SESSION['user_email']) || $_SESSION['user_role'] != "student") {
     header("Location: login.html");
     exit();
 }
-*/
 
+/*
 // TEMP for testing (remove before final submission)
 $_SESSION['user_email'] = "student@student.ksu.edu.sa";
 $_SESSION['user_role'] = "student";
-
+*/
 $email = $_SESSION['user_email'];
 
 

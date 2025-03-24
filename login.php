@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Redirect to the appropriate dashboard
             if ($userType == "student") {
-                header("Location: student-profile.html");
+                header("Location: student-profile.php");
             } elseif ($userType == "clubAdmin") {
                 header("Location: club-profile-admin.html");
             }
