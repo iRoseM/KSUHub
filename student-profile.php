@@ -349,13 +349,13 @@ while ($row = $volunteerResult->fetch_assoc()) {
                     <!-- Navigation -->
                     <nav id="nav">
                         <ul class="main-menu nav navbar-nav navbar-right">
-                            <li><a href="home.html">الصفحة الرئيسية</a></li> <!-- Changed to .php -->
-                            <li><a href="clubs.html">النوادي</a></li> <!-- Changed to .php -->
+                            <li><a href="home.php">الصفحة الرئيسية</a></li> <!-- Changed to .php -->
+                            <li><a href="clubs.php">النوادي</a></li> <!-- Changed to .php -->
                                 <!-- Show profile link based on user type -->
                                 <?php if($_SESSION['user_type'] == "student"): ?>
-                                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                                    <li><a href="student-profile.php">الملف الشخصي</a></li>
                                 <?php else: ?>
-                                    <li><a href="club-profile-admin.html">ملف النادي</a></li>
+                                    <li><a href="club-profile-admin.php">ملف النادي</a></li>
                                 <?php endif; ?>
 
                                 <!-- Logout button (only for logged-in users) -->

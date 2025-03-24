@@ -50,9 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_type'] = $role;
 
             if ($role == "clubAdmin") {
-                header("Location: club-profile-admin.html");
+                header("Location: club-profile-admin.php");
             } else {
-                header("Location: student-profile.html");
+                header("Location: student-profile.php");
             }
             exit();
         } else {
