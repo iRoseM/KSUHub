@@ -25,10 +25,122 @@
 
 		<!-- Icons -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+		<style>
+			.category-filter.active {
+				font-weight: bold;
+				color: #007bff;
+			}
+			#pagination .page-btn {
+				background: #fff;
+				border: 1px solid #ccc;
+				padding: 6px 12px;
+				margin: 2px;
+				cursor: pointer;
+			}
 
+			#pagination .page-btn.active {
+				background: #007bff;
+				color: #fff;
+				border-color: #007bff;
+			}
+
+		</style>
 
     </head>
 	<body>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const searchInput = document.getElementById('clubSearch');
+			const cards = Array.from(document.querySelectorAll('.club-card')); // Converted to array for pagination
+			const paginationContainer = document.getElementById('pagination');
+			let activeCollege = '';
+			const cardsPerPage = 6;
+			let currentPage = 1;
+
+			// Filter + paginate visible clubs
+			function filterClubs() {
+				const keyword = searchInput.value.toLowerCase();
+
+				cards.forEach(card => {
+					const name = card.dataset.name;
+					const college = card.dataset.college;
+					const matchesName = name.includes(keyword);
+					const matchesCollege = !activeCollege || college === activeCollege;
+
+					if (matchesName && matchesCollege) {
+						card.style.display = 'block';
+					} else {
+						card.style.display = 'none';
+					}
+				});
+
+				currentPage = 1;
+				paginate();
+			}
+
+			function getVisibleCards() {
+				return cards.filter(card => card.style.display !== 'none');
+			}
+
+			function paginate() {
+				const visibleCards = getVisibleCards();
+				const totalPages = Math.ceil(visibleCards.length / cardsPerPage);
+
+				// Hide all first
+				cards.forEach(card => card.style.display = 'none');
+
+				// Show only current page cards
+				const start = (currentPage - 1) * cardsPerPage;
+				const end = start + cardsPerPage;
+				visibleCards.slice(start, end).forEach(card => card.style.display = 'block');
+
+				renderPagination(totalPages);
+				toggleNoResults(visibleCards.length === 0);
+			}
+
+			function renderPagination(totalPages) {
+				paginationContainer.innerHTML = '';
+
+				if (totalPages <= 1) return;
+
+				for (let i = 1; i <= totalPages; i++) {
+					const btn = document.createElement('button');
+					btn.textContent = i;
+					btn.className = 'page-btn';
+					if (i === currentPage) btn.classList.add('active');
+					btn.addEventListener('click', () => {
+						currentPage = i;
+						paginate();
+					});
+					paginationContainer.appendChild(btn);
+				}
+			}
+
+			function toggleNoResults(show) {
+				const noResults = document.getElementById('no-results');
+				if (noResults) noResults.style.display = show ? 'block' : 'none';
+			}
+
+			// Event: Search typing
+			searchInput.addEventListener('input', filterClubs);
+
+			// Event: College filter click
+			const collegeFilters = document.querySelectorAll('.category-filter');
+			collegeFilters.forEach(filter => {
+				filter.addEventListener('click', function () {
+					activeCollege = this.dataset.college;
+					collegeFilters.forEach(f => f.classList.remove('active'));
+					this.classList.add('active');
+					filterClubs();
+				});
+			});
+
+			// Initial render
+			filterClubs();
+		});
+	</script>
+
+
 		<header id="header" class="transparent-nav">
 			<div class="head-container">
 
@@ -51,7 +163,7 @@
 					<ul class="main-menu nav navbar-nav navbar-right">
 						<li><a href="home.html">الصفحة الرئيسية</a></li>
 						<li><a href="clubs.html"> النوادي</a></li>
-						<li><a href="student-profile.php">الملف الشخصي</a></li>
+						<li><a href="student-profile.html">الملف الشخصي</a></li>
 					
 						<li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
 					</ul>
@@ -82,7 +194,7 @@
                                     
 					<!-- main club -->
 					<div id="main" class="col-md-9">
-						
+						<p id="no-results" class="text-center" style="display: none; margin-top: 20px;">لا توجد نتائج مطابقة لبحثك</p>
                                             <?php
                                             include 'db_connection.php';
 
@@ -104,60 +216,32 @@
                                                 }
                                             }
                                             $result = $conn->query($sql);
-                                            
-                                            
-                                            
-                                            
-                                            
+
                                             if ($result->num_rows > 0) {
                                                 while ($club = $result->fetch_assoc()) {
                                                     ?>
-                                                    <div class="col-md-6">
-                                                        <div class="single-club">
-                                                            <div class="club-img">
-                                                                <a href="#" class="clubs-clubimg">
-                                                                    <img src="#" alt="<?= $club['clubName'] ?>">
-                                                                </a>
-                                                            </div>
-                                                            <div class="club-name-container">
-                                                                <a class="club-name" href="#">
-                                                                    <?= $club['clubName'] ?>
-                                                                </a>
-                                                            </div>
-                                                            <div class="club-meta">
-<!--                                                                <span class="club-college"> php $club['affiliation'] php </span>-->
-                                                                <div class="pull-right">
-                                                                    <span class="club-meta-author" style="color: <?= $club['is_open'] ? 'green' : 'red' ?>;">
-                                                                        <p>Unkown</p>
-                                                                            <!--How could "availability" be implemented when we don't have a count for members in each club? nor the membership count restrictions of each club-->
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>">
+														<div class="single-club">
+															<div class="club-img">
+																<a href="club-profile-user.php?id=<?= $club['clubID'] ?>" class="clubs-clubimg">
+																	<img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?>">
+																</a>
+															</div>
+															<div class="club-name-container">
+																<a class="club-name" href="club-profile-user.php?id=<?= $club['clubID'] ?>">
+																	<?= $club['clubName'] ?>
+																</a>
+															</div>
+														</div>
+													</div>
                                                     <?php
                                                 }
                                             } else {
                                                 echo '<p class="text-center">لا توجد أندية حالياً.</p>';
                                             }
                                             ?>
-
-						<div class="row">
-							
-                                                    <!-- pagination -->
-							<div class="col-md-12">
-								<div class="post-pagination">
-									<a href="#" class="pagination-back pull-left"><i class="fas fa-arrow-left"></i> للخلف</a>
-									<ul class="pages">
-										<li class="active">1</li>
-										<li><a href="#">2</a></li>
-										<li><a href="#">3</a></li>
-										<li><a href="#">4</a></li>
-									</ul>
-									<a href="#" class="pagination-next pull-right">للأمام<i class="fas fa-arrow-right"></i></a>
-								</div>
-							</div>
-						</div>
+											<!-- Pagination Container -->
+											<div id="pagination" class="text-center" style="margin-top: 30px;"> </div>
 					</div>
 					
 					<!-- aside club -->
@@ -165,21 +249,21 @@
 
 						<!-- search widget -->
 						<div class="widget search-widget">                                                        
-                                                        <form method="GET" action="clubs.php">
-                                                            <input class="input" type="text" name="search" placeholder="ابحث عن نادي..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
-                                                            <button type="submit"><i class="fa fa-search"></i></button>
-                                                        </form> 
+							<form method="GET" action="clubs.php">
+								<input id="clubSearch" class="input" type="text" name="search" placeholder="ابحث عن نادي...">
+								<button type="submit"><i class="fa fa-search"></i></button>
+							</form> 
 						</div>
 
-						<!-- category widget -->
-						<div class="widget category-widget">
+						<!-- category widget (if we added colleges) the script to this part is still not deleted yet-->
+						<!-- <div class="widget category-widget">
 							<h3>الكليات</h3>
-							<a class="category" href="#">CCIS <span>9</span></a> <!-- computer science -->
-							<a class="category" href="#">CBA<span>4</span></a> <!--Business-->
-							<a class="category" href="#">CD <span>5</span></a> <!-- midcine-->
-							<a class="category" href="#">CAMS <span>7</span></a> <!-- applied medical sciences-->
-							<a class="category" href="#">CTA <span>3</span></a> <!-- tournism and arcmaeology السياحة-->                                 
-                                                </div>
+							<a class="category-filter" data-college="ccis">CCIS</a>
+							<a class="category-filter" data-college="cba">CBA</a>
+							<a class="category-filter" data-college="cd">CD</a>
+							<a class="category-filter" data-college="cams">CAMS</a>
+							<a class="category-filter" data-college="cta">CTA</a>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -203,7 +287,7 @@
 						<ul class="footer-nav">
 							<li><a href="home.html">الصفحة الرئيسية</a></li>
 							<li><a href="clubs.html"> النوادي</a></li>
-							<li><a href="student-profile.php">الملف الشخصي</a></li>
+							<li><a href="student-profile.html">الملف الشخصي</a></li>
 							<li><a href="contact.html">تواصل معنا</a></li>
 						</ul>
 					</div>

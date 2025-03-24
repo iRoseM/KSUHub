@@ -42,7 +42,7 @@
 					<ul class="main-menu nav navbar-nav navbar-right">
 						<li><a href="home.html">الصفحة الرئيسية</a></li>
 						<li><a href="clubs.html"> النوادي</a></li>
-						<li><a href="student-profile.php">الملف الشخصي</a></li>
+						<li><a href="student-profile.html">الملف الشخصي</a></li>
 					
 						<li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
 					</ul>
@@ -71,9 +71,8 @@
 
 		<!-- Clubs -->
 		<div id="clubs" class="section">
-                        
 			<div class="container">
-
+				
 				<!-- row -->
 				<div class="row">
 					<div class="section-header text-center">
@@ -81,51 +80,43 @@
 						<p class="lead">هنا المنافسة والتحدي!</p>
 					</div>
 				</div>
+				
 				<!-- /Inner-Clubs -->
 				<div id="clubs-wrapper">
-                                    <?php
-                                    include 'db_connection.php';
+					<?php
+					include 'db_connection.php';
 
-                                    $sql = "SELECT * FROM adminuser LIMIT 8";
-                                    $result = $conn->query($sql);
+					$sql = "SELECT * FROM adminuser LIMIT 8";
+					$result = $conn->query($sql);
 
-                                    if ($result->num_rows > 0) {
-                                        $i = 0;
-                                        echo '<div class="row">';
+					if ($result->num_rows > 0) {
+						$i = 0;
+						echo '<div class="row">';
 
-                                        while($club = $result->fetch_assoc()) {
-                                            if ($i > 0 && $i % 4 == 0) {
-                                                echo '</div><div class="row">';
-                                            }
-                                            ?>
-
-                                            <div class="col-md-3 col-sm-6 col-xs-6">
-                                                <div class="club">
-                                                    <!--Undone-->
-                                                    <a href="#" class="club-img">
-                                                        <img src="#" alt="<?= $club['clubName'] ?> logo">
-                                                        <i class="club-link-icon fa fa-link"></i>
-                                                    </a>
-                                                    <!--Undone-->
-                                                    <a class="club-title" href="#"> 
-                                                        <?= $club['clubName'] ?>
-                                                    </a>
-
-                                                    <!-- <div class="club-details">
-                                                        <span class="club-category"> php $club['college'] php </span>
-                                                    </div>-->
-                                                </div>
-                                            </div>
-
-                                            <?php
-                                            $i++;
-                                        }
-
-                                        echo '</div>';
-                                    } else {
-                                        echo '<p>لا توجد أندية متاحة حالياً.</p>';
-                                    }
-                                    ?>
+						while($club = $result->fetch_assoc()) {
+							if ($i > 0 && $i % 4 == 0) {
+								echo '</div><div class="row">';
+							}
+							?>
+							<div class="col-md-3 col-sm-6 col-xs-6">
+								<div class="club">
+									<a href="club-profile-user.php?id=<?= $club['clubID'] ?>" class="club-img">
+										<img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?> logo">
+										<i class="club-link-icon fa fa-link"></i>
+									</a>
+									<a class="club-title" href="club-profile-user.php?id=<?= $club['clubID'] ?>">
+										<?= $club['clubName'] ?>
+									</a>
+								</div>
+							</div>
+					<?php
+					$i++;
+						}
+						echo '</div>';
+					} else {
+						echo '<p>لا توجد أندية متاحة حالياً.</p>';
+					}
+					?>
 				</div>
 
 				<div class="row">
@@ -133,45 +124,9 @@
 						<a class="main-button icon-button" href="clubs.php">جميع الأندية</a>
 					</div>
 				</div>
-
 			</div>
 		</div>
-                
                 <!--Events-->
-                <?php
-                include 'db_connection.php';
-
-                // rotate events every 3 days
-                $offset = floor((time() - strtotime('2024-01-01')) / (3 * 86400));
-                $event_sql = "SELECT * FROM event LIMIT 1 OFFSET $offset";
-                $event_result = $conn->query($event_sql);
-
-                if ($event_result->num_rows > 0) {
-                    $event = $event_result->fetch_assoc();
-                    ?>
-
-                    <div id="cta" class="section">
-                        <!-- Background Image -->
-<!--                        <div class="bg-image bg-parallax overlay" style="background-image:url(uploads/ php $event['image'] php )"></div>-->
-
-                        <!-- container -->
-                        <div class="container">
-                            <!-- row -->
-                            <div class="row">
-                                <div class="col-md-6">
-<!--                                    <h2 class="white-text"> php $event['title'] php </h2> shouls be title, but we dont have one yet-->
-                                    <p class="lead white-text"><?= $event['eventDescription'] ?></p>
-                                    <a class="main-button icon-button" href="#">!إذهب لصفحة النادي</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <?php
-                } else {
-                    echo "<p class='text-center'> ترقبوا جديد سعود!</p>";
-                }
-                ?>
                 <?php
                 include 'db_connection.php';
 
@@ -193,9 +148,9 @@
                             <!-- row -->
                             <div class="row">
                                 <div class="col-md-6">
-                                    <h2 class="white-text"><?= $event['title'] ?></h2>
-                                    <p class="lead white-text"><?= $event['description'] ?></p>
-                                    <a class="main-button icon-button" href="club-profile-user.php?id=<?= $event['club_id'] ?>">!إذهب لصفحة النادي</a>
+                                    <h2 class="white-text"><?= $event['eventName'] ?></h2>
+                                    <p class="lead white-text"><?= $event['eventDescription'] ?></p>
+                                    <a class="main-button icon-button" href="club-profile-user.php?id=<?= $event['clubID'] ?>">!إذهب لصفحة النادي</a>
                                 </div>
                             </div>
                         </div>
@@ -215,14 +170,12 @@
                             </div>
                         </div>
                     </div>
-
                 <?php
                 }
                 ?>
-
-
+				
 		<div id="why-us" class="section">
-
+			
 			<!-- container -->
 			<div class="container">
 
@@ -335,7 +288,7 @@
 						<ul class="footer-nav">
 							<li><a href="home.html">الصفحة الرئيسية</a></li>
 							<li><a href="clubs.html"> النوادي</a></li>
-							<li><a href="student-profile.php">الملف الشخصي</a></li>
+							<li><a href="student-profile.html">الملف الشخصي</a></li>
 							<li><a href="contact.html">تواصل معنا</a></li>
 						</ul>
 					</div>
