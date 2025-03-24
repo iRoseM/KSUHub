@@ -1,3 +1,18 @@
+<?php
+
+error_reporting(E_ALL); 
+ini_set('log_errors','1'); 
+ini_set('display_errors','1'); 
+
+session_start();
+include 'db_connection.php';
+
+
+if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["student", "clubAdmin"])) {
+    header("Location: index.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -20,36 +35,43 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
 	<body>
-            <!--debug-->
-		<header id="header" class="transparent-nav">
-			<div class="head-container">
-				<div class="navbar-header">
-					<!-- Logo -->
-					<div class="navbar-brand">
-						<a class="logo" href="home.html">
-							<img src="./img/logo-alt.png" alt="logo">
-						</a>
-					</div>
+            <header id="header" class="transparent-nav">
+                <div class="head-container">
+                    <div class="navbar-header">
+                        <!-- Logo -->
+                        <div class="navbar-brand">
+                            <a class="logo" href="home.php"> <!-- Changed to .php -->
+                                <img src="./img/logo-alt.png" alt="logo">
+                            </a>
+                        </div>
+                        <!-- Mobile toggle -->
+                        <button class="navbar-toggle">
+                            <span></span>
+                        </button>
+                    </div>
 
-					<!-- Mobile toggle -->
-					<button class="navbar-toggle">
-						<span></span>
-					</button>
-				</div>
+                    <!-- Navigation -->
+                    <nav id="nav">
+                        <ul class="main-menu nav navbar-nav navbar-right">
+                            <li><a href="home.html">الصفحة الرئيسية</a></li> <!-- Changed to .php -->
+                            <li><a href="clubs.html">النوادي</a></li> <!-- Changed to .php -->
+                                <!-- Show profile link based on user type -->
+                                <?php if($_SESSION['user_type'] == "student"): ?>
+                                    <li><a href="student-profile.html">الملف الشخصي</a></li>
+                                <?php else: ?>
+                                    <li><a href="club-profile-admin.html">ملف النادي</a></li>
+                                <?php endif; ?>
 
-				<!-- Navigation -->
-				<nav id="nav">
-					<ul class="main-menu nav navbar-nav navbar-right">
-						<li><a href="home.html">الصفحة الرئيسية</a></li>
-						<li><a href="clubs.html"> النوادي</a></li>
-						<li><a href="student-profile.php">الملف الشخصي</a></li>
-					
-						<li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
-					</ul>
-				</nav>
-
-			</div>
-		</header>
+                                <!-- Logout button (only for logged-in users) -->
+                                <li class="logout-item">
+                                    <a href="logout.php" class="logout-button">
+                                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                                    </a>
+                                </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
 
 		<!-- Home -->
 		<div id="home" class="hero-area">
@@ -71,71 +93,72 @@
 
 		<!-- Clubs -->
 		<div id="clubs" class="section">
-                        
-			<div class="container">
+                    <div class="container">
+                        <!-- Row for Header -->
+                        <div class="row">
+                            <div class="section-header text-center">
+                                <h2>أشهر النوادي</h2>
+                                <p class="lead">هنا المنافسة والتحدي!</p>
+                            </div>
+                        </div>
 
-				<!-- row -->
-				<div class="row">
-					<div class="section-header text-center">
-						<h2>أشهر النوادي</h2>
-						<p class="lead">هنا المنافسة والتحدي!</p>
-					</div>
-				</div>
-				<!-- /Inner-Clubs -->
-				<div id="clubs-wrapper">
-                                    <?php
-                                    include 'db_connection.php';
+                        <div id="clubs-wrapper">
+                            <?php
+                            include 'db_connection.php';
 
-                                    $sql = "SELECT * FROM adminuser LIMIT 8";
-                                    $result = $conn->query($sql);
+                            $sql = "SELECT * FROM adminuser LIMIT 8";  // Get first 8 clubs
+                            $result = $conn->query($sql);
 
-                                    if ($result->num_rows > 0) {
-                                        $i = 0;
-                                        echo '<div class="row">';
+                            if ($result->num_rows > 0) {
+                                $i = 0;
+                                echo '<div class="row">';
 
-                                        while($club = $result->fetch_assoc()) {
-                                            if ($i > 0 && $i % 4 == 0) {
-                                                echo '</div><div class="row">';
-                                            }
-                                            ?>
-
-                                            <div class="col-md-3 col-sm-6 col-xs-6">
-                                                <div class="club">
-                                                    <!--Undone-->
-                                                    <a href="#" class="club-img">
-                                                        <img src="#" alt="<?= $club['clubName'] ?> logo">
-                                                        <i class="club-link-icon fa fa-link"></i>
-                                                    </a>
-                                                    <!--Undone-->
-                                                    <a class="club-title" href="#"> 
-                                                        <?= $club['clubName'] ?>
-                                                    </a>
-
-                                                    <!-- <div class="club-details">
-                                                        <span class="club-category"> php $club['college'] php </span>
-                                                    </div>-->
-                                                </div>
-                                            </div>
-
-                                            <?php
-                                            $i++;
-                                        }
-
-                                        echo '</div>';
-                                    } else {
-                                        echo '<p>لا توجد أندية متاحة حالياً.</p>';
+                                while($club = $result->fetch_assoc()) {
+                                    if ($i > 0 && $i % 4 == 0) {
+                                        echo '</div><div class="row">';  // Break the row into a new line after 4 items
                                     }
                                     ?>
-				</div>
 
-				<div class="row">
-					<div class="center-btn">
-						<a class="main-button icon-button" href="clubs.php">جميع الأندية</a>
-					</div>
-				</div>
+                                    <div class="col-md-3 col-sm-6 col-xs-6">
+                                        <div class="club">
+                                            <!-- Club Image -->
+                                            <a href="#" class="club-img" style=" width: 100%; height: 200px;">
+                                                <!-- Dynamically display club logo -->
+                                                <img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?> logo">
+                                                <i class="club-link-icon fa fa-link"></i>
+                                            </a>
 
-			</div>
-		</div>
+                                            <!-- Club Title -->
+                                            <a class="club-title" href="#"> 
+                                                <?= $club['clubName'] ?>  <!-- Club Name -->
+                                            </a>
+
+                                            <!-- Club Description/Goal -->
+                                            <div class="club-details">
+                                                <span class="club-category"><?= $club['clubCollege'] ?></span> <!-- Club Goal -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <?php
+                                    $i++;
+                                }
+
+                                echo '</div>';
+                            } else {
+                                echo '<p>لا توجد أندية متاحة حالياً.</p>';  // Display this message if no clubs are found
+                            }
+                            ?>
+                        </div>
+
+                        <!-- View All Clubs Button -->
+                        <div class="row">
+                            <div class="center-btn">
+                                <a class="main-button icon-button" href="clubs.php">جميع الأندية</a> <!-- Link to view all clubs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!--Events-->
                 <?php

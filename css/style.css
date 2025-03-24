@@ -645,7 +645,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 .club .club-img {
 	position: relative;
 	display:block;
-	margin-bottom:20px;
+/*	margin-bottom:20px;*/
 	box-shadow: 5px 5px 5px rgba(55, 54, 54, 0.1);
 	border-radius:4px;
 	overflow:hidden;
