@@ -1,5 +1,6 @@
 <?php
 include_once 'db_connection.php';
+include 'navbar.php.php';
 $sql = "SELECT clubName, clubVision, image , clubAccount FROM adminuser WHERE clubID = 1"; 
 $result = $conn->query($sql);
 

@@ -55,17 +55,17 @@
                 <div class="col-md-6">
                     <div class="log-login-box">
                         <h2 class="log-white-text text-center" style="text-align: center;"> KSUHub تســجيل الدخول إلى</h2>
-                        <form action="dashboard.html" method="POST">
+                        <form action="login.php" method="POST">
                             <div class="log-form-group">
                                 <!-- Email -->
                             <div class="log-form-group">
                                 <label class="log-white-text">البريد الإلكتروني</label>
-                                <input type="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني الجامعي (يبدأ بـ 4)" pattern="4.+@student\.ksu\.edu\.sa" required>
+                                 <input type="email" name="email" class="log-form-control" placeholder="أدخل البريد الإلكتروني" required>
                             </div>
                             </div>
                             <div class="log-form-group">
                                 <label class="log-white-text">كلـمة المــرور</label>
-                                <input type="password" class="log-form-control" placeholder="أدخل كلـمة المــرور" required>
+                                <input type="password" name="password" class="log-form-control" placeholder="أدخل كلمة المرور" required>
                             </div>
 
                             <!-- Role Selection Radio Buttons -->
@@ -84,7 +84,7 @@
                                 </div>
                             </div>
                             <!-- <button type="submit" class="log-main-button log-icon-button btn-block">LOGIN</button> -->
-                            <a href="home.html" class="log-main-button log-icon-button btn-block">تســجيل الدخول</a>
+                            <button type="submit" class="log-main-button log-icon-button btn-block">تســجيل الدخول</button>
                             <p class="text-center log-white-text mt-3" style="text-align: center;">
                                 لـيس لديـك حسـاب؟ 
                                 <a href="signup.html" class="log-white-text"><strong>سـجّل الآن</strong></a>
