@@ -14,11 +14,19 @@ if (!isset($_SESSION['user_email']) || $_SESSION['user_role'] != "student") {
 
 $email = $_SESSION['user_email'];
 
-$successMessage = "";
-if (isset($_SESSION['success_message'])) {
-    $successMessage = $_SESSION['success_message'];
-    unset($_SESSION['success_message']);
+$successProfile = "";
+$successVolunteer = "";
+
+if (isset($_SESSION['success_profile_message'])) {
+    $successProfile = $_SESSION['success_profile_message'];
+    unset($_SESSION['success_profile_message']);
 }
+
+if (isset($_SESSION['success_volunteer_message'])) {
+    $successVolunteer = $_SESSION['success_volunteer_message'];
+    unset($_SESSION['success_volunteer_message']);
+}
+
 
 // Handle form submission (add volunteer hours)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'], $_POST['workDescription'], $_POST['committee'])) {
@@ -50,10 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'
 
 
         if ($stmt->execute()) {
-            // Get the new volunteeringID (manually, since it's not auto-increment)
-            $getID = $conn->query("SELECT MAX(volunteeringID) AS maxID FROM volunteeringhours");
-            $idRow = $getID->fetch_assoc();
-            $volunteeringID = $idRow['maxID'];
+            $volunteeringID = $newID;
         
             // Insert into 'record' table
             $recordQuery = "INSERT INTO record (membershipID, voulnteeringID, email) VALUES (?, ?, ?)";
@@ -62,13 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'
 
             $recordStmt->execute();
         
-            // Update totalHours in studentUser
-            $updateQuery = "UPDATE studentUser SET volunteeringHours = volunteeringHours + ? WHERE email = ?";
+            // Update totalHours in studentuser
+            $updateQuery = "UPDATE studentuser SET volunteeringHours = volunteeringHours + ? WHERE email = ?";
             $updateStmt = $conn->prepare($updateQuery);
             $updateStmt->bind_param("is", $hours, $email);
             $updateStmt->execute();
             
-            $_SESSION['success_message'] = "تمت إضافة الساعات التطوعية بنجاح.";
+            $_SESSION['success_volunteer_message'] = "تمت إضافة الساعات التطوعية بنجاح.";
 
             // Redirect or success message
             header("Location: student-profile.php");
@@ -83,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'
 }
 
 // Fetch student info
-$query = "SELECT fullName, email, college, studyingLevel, bio FROM studentUser WHERE email = ?";
+$query = "SELECT fullName, email, college, studyingLevel, bio, profileImg FROM studentuser WHERE email = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -371,22 +376,28 @@ while ($row = $volunteerResult->fetch_assoc()) {
 
     <!-- Profile Section -->
     <div class="container profile-container">
+            <?php if (!empty($successProfile)): ?>
+            <div class="alert alert-success text-center" style="margin-bottom: 20px;">
+                <?= $successProfile ?>
+            </div>
+        <?php endif; ?>
+
         <div class="row">
             <!-- Profile Card: Right Side -->
             <div class="col-md-4">
                 <div class="profile-card">
                     <?php
-                    $profileImage = !empty($student['profileImg']) ? 'img/' . $student['profileImg'] : 'img/profileIcon.png';
+                        $profileImage = !empty($student['profileImg']) ? 'uploads/' . $student['profileImg'] : 'img/profileIcon.png';
                     ?>
-                    <img src="<?= $profileImage ?>" class="profile-img" alt="Student Picture">
+                    <img src="<?= $profileImage . '?v=' . time() ?>" class="profile-img" alt="Student Picture">
                     <?php
-                    echo "<h3>" . $student['fullName'] . "</h3>";
-                    echo "<p><strong>البريد الإلكتروني:</strong> " . $student['email'] . "</p>"; 
-                    echo "<p><strong>الكلية:</strong> " . $student['college'] . "</p>"; 
-                    echo "<p><strong>المستوى الدراسي:</strong> " . $student['studyingLevel'] . "</p>"; 
-                    echo "<p><strong>نبذة:</strong> " . nl2br($student['bio']) . "</p>"; 
+                        echo "<h3>" . $student['fullName'] . "</h3>";
+                        echo "<p><strong>البريد الإلكتروني:</strong> " . htmlspecialchars($student['email']) . "</p>"; 
+                        echo "<p><strong>الكلية:</strong> " . htmlspecialchars($student['college']) . "</p>"; 
+                        echo "<p><strong>المستوى الدراسي:</strong> " . htmlspecialchars($student['studyingLevel']) . "</p>"; 
+                        echo "<p><strong>نبذة:</strong> " . nl2br($student['bio']) . "</p>"; 
                     ?>
-                    <form action="student-edit.html" method="get">
+                    <form action="student-edit.php" method="get">
                         <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button>
                     </form>
                 </div>
@@ -408,11 +419,12 @@ while ($row = $volunteerResult->fetch_assoc()) {
                         }
                     ?>
                     <h3>إضافة الساعات التطوعية</h3>
-                    <?php if (!empty($successMessage)): ?>
-                        <div class="alert alert-success text-center" style="margin-bottom: 20px; background-color: #dff0d8; padding: 15px; border-radius: 8px; color: #3c763d;">
-                            <?= $successMessage ?>
+                    <?php if (!empty($successVolunteer)): ?>
+                        <div class="alert alert-success text-center" style="margin-bottom: 20px;">
+                            <?= $successVolunteer ?>
                         </div>
                     <?php endif; ?>
+
 
                     <form action="student-profile.php" method="post">
                         <div class="form-group">
