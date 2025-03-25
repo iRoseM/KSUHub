@@ -1,4 +1,6 @@
 <?php
+session_start(); 
+
 include_once 'db_connection.php';
 
 if (!empty($_GET['ClubID']) && ctype_digit($_GET['ClubID'])) {
@@ -42,6 +44,35 @@ if (!empty($_GET['ClubID']) && ctype_digit($_GET['ClubID'])) {
     echo "<p>ID غير صحيح</p>";
     exit;
 }
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clubID'])) {
+    $clubID = intval($_POST['clubID']); 
+
+    if ( isset($_SESSION['user_email'])) {
+        $email = $_SESSION['user_email'];
+
+        $insertSql = "INSERT INTO membership (email, clubID, status) VALUES (?, ?, ?)";
+        $insertStmt = $conn->prepare($insertSql);
+        $status = 'pending';
+
+        $insertStmt->bind_param("sss", $email, $clubID, $status);
+
+        if ($insertStmt->execute()) {
+            echo "تم ارسال طلبك بنجاح! ";
+        } else {
+            echo "حدث خطأ أثناء الانضمام. يرجى المحاولة مرة أخرى.";
+        }
+
+        $insertStmt->close();
+    } else {
+        echo "لم يتم العثور على بيانات المستخدم في السيشن.";
+    }
+    $conn->close();
+
+
+}
+
 
 $conn->close();
 ?>
@@ -146,7 +177,7 @@ $conn->close();
         </div>
 
         <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 6rem;">
-            <a class="main-button icon-button" href="#">! أنضم الينا</a>
+            <a id="joinButton" class="main-button icon-button" href="#">! أنضم الينا</a>
         </div>
         
         <!-- About -->
@@ -245,6 +276,23 @@ $conn->close();
             </div>
         </div>
     </footer>
+
+
+    <script>
+    document.getElementById('joinButton').addEventListener('click', function() {
+        var clubID = <?php echo $clubID; ?>; // Get the ClubID dynamically from PHP
+        // Send the AJAX request to PHP to insert the user into the club_members table
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true); // Send to the same page
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert(xhr.responseText); // Show success or failure message
+            }
+        };
+        xhr.send('clubID=' + clubID);
+    });
+</script>
 
 </body>
 </html>

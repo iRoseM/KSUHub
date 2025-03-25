@@ -43,7 +43,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $user['password'])) {
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_type'] = $role;
-
+            $_SESSION['fullName'] = $user['fullName']; 
+            $_SESSION['userPhone'] = $user['phoneNo']; 
+            
             if ($role == "clubAdmin") {
                 $_SESSION['ClubID'] = $user['clubID']; 
                 header("Location: club-profile-admin.php");
