@@ -48,99 +48,6 @@
 
     </head>
 	<body>
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			const searchInput = document.getElementById('clubSearch');
-			const cards = Array.from(document.querySelectorAll('.club-card')); // Converted to array for pagination
-			const paginationContainer = document.getElementById('pagination');
-			let activeCollege = '';
-			const cardsPerPage = 6;
-			let currentPage = 1;
-
-			// Filter + paginate visible clubs
-			function filterClubs() {
-				const keyword = searchInput.value.toLowerCase();
-
-				cards.forEach(card => {
-					const name = card.dataset.name;
-					const college = card.dataset.college;
-					const matchesName = name.includes(keyword);
-					const matchesCollege = !activeCollege || college === activeCollege;
-
-					if (matchesName && matchesCollege) {
-						card.style.display = 'block';
-					} else {
-						card.style.display = 'none';
-					}
-				});
-
-				currentPage = 1;
-				paginate();
-			}
-
-			function getVisibleCards() {
-				return cards.filter(card => card.style.display !== 'none');
-			}
-
-			function paginate() {
-				const visibleCards = getVisibleCards();
-				const totalPages = Math.ceil(visibleCards.length / cardsPerPage);
-
-				// Hide all first
-				cards.forEach(card => card.style.display = 'none');
-
-				// Show only current page cards
-				const start = (currentPage - 1) * cardsPerPage;
-				const end = start + cardsPerPage;
-				visibleCards.slice(start, end).forEach(card => card.style.display = 'block');
-
-				renderPagination(totalPages);
-				toggleNoResults(visibleCards.length === 0);
-			}
-
-			function renderPagination(totalPages) {
-				paginationContainer.innerHTML = '';
-
-				if (totalPages <= 1) return;
-
-				for (let i = 1; i <= totalPages; i++) {
-					const btn = document.createElement('button');
-					btn.textContent = i;
-					btn.className = 'page-btn';
-					if (i === currentPage) btn.classList.add('active');
-					btn.addEventListener('click', () => {
-						currentPage = i;
-						paginate();
-					});
-					paginationContainer.appendChild(btn);
-				}
-			}
-
-			function toggleNoResults(show) {
-				const noResults = document.getElementById('no-results');
-				if (noResults) noResults.style.display = show ? 'block' : 'none';
-			}
-
-			// Event: Search typing
-			searchInput.addEventListener('input', filterClubs);
-
-			// Event: College filter click
-			const collegeFilters = document.querySelectorAll('.category-filter');
-			collegeFilters.forEach(filter => {
-				filter.addEventListener('click', function () {
-					activeCollege = this.dataset.college;
-					collegeFilters.forEach(f => f.classList.remove('active'));
-					this.classList.add('active');
-					filterClubs();
-				});
-			});
-
-			// Initial render
-			filterClubs();
-		});
-	</script>
-
-
 		<header id="header" class="transparent-nav">
 			<div class="head-container">
 
@@ -195,74 +102,79 @@
 					<!-- main club -->
 					<div id="main" class="col-md-9">
 						<p id="no-results" class="text-center" style="display: none; margin-top: 20px;">لا توجد نتائج مطابقة لبحثك</p>
-                                            <?php
-                                            include 'db_connection.php';
+						<?php
+						include 'db_connection.php';
 
-                                            $search = isset($_GET['search']) ? $_GET['search'] : '';
-                                            $sql = "SELECT * FROM adminuser";
+						$sql = "SELECT * FROM adminuser";
+						
+						$college = isset($_GET['college']) ? $_GET['college'] : '';
+						if (!empty($college)) {
+							$college = $conn->real_escape_string($college);
+							if (strpos($sql, 'WHERE') !== false) {
+								$sql .= " AND affiliation LIKE '%$college%'";
+							} else {
+								$sql .= " WHERE affiliation LIKE '%$college%'";
+							}
+						}
+						$result = $conn->query($sql);
 
-                                            if (!empty($search)) {
-                                                $search = $conn->real_escape_string($search);
-                                                $sql .= " WHERE clubName LIKE '%$search%'";
-                                            }
-                                            
-                                            $college = isset($_GET['college']) ? $_GET['college'] : '';
-                                            if (!empty($college)) {
-                                                $college = $conn->real_escape_string($college);
-                                                if (strpos($sql, 'WHERE') !== false) {
-                                                    $sql .= " AND affiliation LIKE '%$college%'";
-                                                } else {
-                                                    $sql .= " WHERE affiliation LIKE '%$college%'";
-                                                }
-                                            }
-                                            $result = $conn->query($sql);
+						if ($result->num_rows > 0) {
+							while ($club = $result->fetch_assoc()) {
+								?>
+							<div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>" data-college="<?= strtolower($club['clubCollege']) ?>">
+								<div class="single-club">
+									<div class="club-img">
+										<a href="club-profile-user.php?id=<?= $club['clubID'] ?>" class="clubs-clubimg">
+											<img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?>">
+										</a>
+									</div>
+									<div class="club-name-container">
+										<a class="club-name" href="club-profile-user.php?id=<?= $club['clubID'] ?>">
+											<?= $club['clubName'] ?>
+										</a>
+									</div>
+									<div class="club-meta">
+										<span class="club-college"><?= $club['clubCollege'] ?></span>
+										<!-- <div class="pull-right">
+											<span class="club-meta-author" style="color: red; ">التسجيل مغلق</span>
+										</div> -->
+									</div>
+								</div>
+							</div>
 
-                                            if ($result->num_rows > 0) {
-                                                while ($club = $result->fetch_assoc()) {
-                                                    ?>
-                                                    <div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>">
-														<div class="single-club">
-															<div class="club-img">
-																<a href="club-profile-user.php?id=<?= $club['clubID'] ?>" class="clubs-clubimg">
-																	<img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?>">
-																</a>
-															</div>
-															<div class="club-name-container">
-																<a class="club-name" href="club-profile-user.php?id=<?= $club['clubID'] ?>">
-																	<?= $club['clubName'] ?>
-																</a>
-															</div>
-														</div>
-													</div>
-                                                    <?php
-                                                }
-                                            } else {
-                                                echo '<p class="text-center">لا توجد أندية حالياً.</p>';
-                                            }
-                                            ?>
-											<!-- Pagination Container -->
-											<div id="pagination" class="text-center" style="margin-top: 30px;"> </div>
+								<?php
+							}
+					} else {
+						echo '<p class="text-center">لا توجد أندية حالياً.</p>';
+					}
+					?>
+						<!-- Pagination Container -->
+						<div class="row">
+							<div class="col-md-12">
+								<div class="post-pagination">
+									<ul id="pagination" class="pages"></ul>
+								</div>
+							</div>
+						</div>
 					</div>
 					
 					<!-- aside club -->
 					<div id="aside" class="col-md-3">
-
-						<!-- search widget -->
-						<div class="widget search-widget">                                                        
-							<form method="GET" action="clubs.php">
-								<input id="clubSearch" class="input" type="text" name="search" placeholder="ابحث عن نادي...">
+						
+						<div class="widget search-widget">
+							<form id="searchForm">
+								<input id="clubSearch" class="input" type="text" placeholder="ابحث عن نادي...">
 								<button type="submit"><i class="fa fa-search"></i></button>
-							</form> 
+							</form>
 						</div>
 
-						<!-- category widget (if we added colleges) the script to this part is still not deleted yet-->
+						<!-- category widget-->
 						<div class="widget category-widget">
 							<h3>الكليات</h3>
-							<a class="category-filter" data-college="ccis">CCIS</a>
-							<a class="category-filter" data-college="cba">CBA</a>
-							<a class="category-filter" data-college="cd">CD</a>
-							<a class="category-filter" data-college="cams">CAMS</a>
-							<a class="category-filter" data-college="cta">CTA</a>
+							<a class="category" data-college="كلية علوم الحاسب والمعلومات"> كلية علوم الحاسب والمعلومات</a>
+							<a class="category" data-college="كلية إدارة الأعمال">كلية إدارة الأعمال</a>
+							<a class="category" data-college="معهد ريادة الأعمال">معهد ريادة الأعمال</a>
+							<a class="category" data-college="كلية العلوم الطبية التطبيقية">كلية العلوم الطبية التطبيقية</a>
 						</div>
 					</div>
 				</div>
@@ -316,6 +228,111 @@
 		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
+		
+		<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const searchInput = document.getElementById('clubSearch');
+			const allCards = Array.from(document.querySelectorAll('.club-card'));
+			const paginationContainer = document.getElementById('pagination');
+			const collegeFilters = document.querySelectorAll('.category');
+			const searchForm = document.getElementById('searchForm');
+
+			let activeCollege = '';
+			const cardsPerPage = 4;
+			let currentPage = 1;
+			let filteredCards = [];
+
+			// Reset search input on hard refresh
+			if (window.performance && window.performance.navigation.type === 1) {
+				searchInput.value = '';
+			}
+
+			function toggleNoResults(show) {
+				const noResults = document.getElementById('no-results');
+				if (noResults) noResults.style.display = show ? 'block' : 'none';
+			}
+
+			function renderPagination(totalPages) {
+			const paginationList = document.getElementById('pagination');
+			paginationList.innerHTML = '';
+
+			if (totalPages <= 1) return;
+
+			for (let i = 1; i <= totalPages; i++) {
+				const li = document.createElement('li');
+				if (i === currentPage) {
+					li.classList.add('active');
+					li.textContent = i;
+				} else {
+					const a = document.createElement('a');
+					a.href = "#";
+					a.textContent = i;
+					a.addEventListener('click', (e) => {
+						e.preventDefault();
+						currentPage = i;
+						showCurrentPage();
+					});
+					li.appendChild(a);
+				}
+				paginationList.appendChild(li);
+			}
+		}
+
+
+			function showCurrentPage() {
+				allCards.forEach(card => card.style.display = 'none');
+
+				const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+				const start = (currentPage - 1) * cardsPerPage;
+				const end = start + cardsPerPage;
+
+				filteredCards.slice(start, end).forEach(card => {
+					card.style.display = 'block';
+				});
+
+				renderPagination(totalPages);
+				toggleNoResults(filteredCards.length === 0);
+			}
+
+			function filterClubs() {
+				const keyword = searchInput.value.toLowerCase();
+
+				filteredCards = allCards.filter(card => {
+					const name = card.dataset.name;
+					const college = card.dataset.college.toLowerCase();
+					const matchesName = name.includes(keyword);
+					const matchesCollege = !activeCollege || college === activeCollege.toLowerCase();
+
+					return matchesName && matchesCollege;
+				});
+
+				currentPage = 1;
+				showCurrentPage();
+			}
+
+			// Event: Live search
+			searchInput.addEventListener('input', filterClubs);
+
+			// Event: Filter by college
+			collegeFilters.forEach(filter => {
+				filter.addEventListener('click', function () {
+					activeCollege = this.dataset.college;
+					collegeFilters.forEach(f => f.classList.remove('active'));
+					this.classList.add('active');
+					filterClubs();
+				});
+			});
+
+			// Event: Prevent form reload
+			searchForm.addEventListener('submit', function (e) {
+				e.preventDefault();
+				filterClubs();
+			});
+
+			// Initial render
+			filterClubs();
+		});
+		</script>
 
 	</body>
 </html>

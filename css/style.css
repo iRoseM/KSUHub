@@ -884,7 +884,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 
 /*-- Search --*/
 .widget.search-widget {
-	position:relative
+	position:relative;
+	text-align:right;
 }
 
 .widget.search-widget .input {
@@ -911,26 +912,25 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	text-transform:uppercase;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	text-align: right;
 }
 
 .category-widget .category + .category {
 	border-top: 1px solid #EBEBEB;
 }
 
-.category-widget .category:before {
+.category-widget .category:after {
 	content: "";
 	display: inline-block;
 	width: 4px;
 	height: 4px;
 	border-radius: 50%;
 	background-color: #FF6700;
-	margin-right:10px;
+	margin-left:10px;
 }
 
-.category-widget .category span {
-	font-size:14px;
-	margin-left:10px;
-	color:#798696;
+.category-widget h3 {
+	text-align: right;
 }
 
 /*-- Sidebar Posts --*/
