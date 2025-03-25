@@ -256,14 +256,14 @@
 						</div>
 
 						<!-- category widget (if we added colleges) the script to this part is still not deleted yet-->
-						<!-- <div class="widget category-widget">
+						<div class="widget category-widget">
 							<h3>الكليات</h3>
 							<a class="category-filter" data-college="ccis">CCIS</a>
 							<a class="category-filter" data-college="cba">CBA</a>
 							<a class="category-filter" data-college="cd">CD</a>
 							<a class="category-filter" data-college="cams">CAMS</a>
 							<a class="category-filter" data-college="cta">CTA</a>
-						</div> -->
+						</div>
 					</div>
 				</div>
 			</div>

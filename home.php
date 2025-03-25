@@ -21,16 +21,21 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>KSUHub | الصفحة الرئيسية  </title>
 		<link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
+		
 		<!-- Bootstrap -->
 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+		
 		<!-- Font Awesome Icon -->
 		<link rel="stylesheet" href="css/font-awesome.min.css">
+		
 		<!-- Custom stylesheet  --> 
 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+		
 		<!-- Arabic font -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+		
 		<!-- Icons -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </head>
