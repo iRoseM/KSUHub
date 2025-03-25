@@ -2,7 +2,7 @@
     session_start();
     include 'db_connection.php';
 
-    if (!isset($_SESSION['user_email']) || $_SESSION['user_role'] != "student") {
+    if (!isset($_SESSION['user_email']) || $_SESSION['user_type'] != "student") {
         header("Location: login.html");
         exit();
     }

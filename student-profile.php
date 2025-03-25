@@ -397,16 +397,18 @@ while ($row = $volunteerResult->fetch_assoc()) {
             <div class="col-md-4">
                 <div class="profile-card">
                     <?php
-                        $profileImage = !empty($student['profileImg']) ? 'uploads/' . $student['profileImg'] : 'img/profileIcon.png';
+                    $profileImage = (!empty($student['profileImg']) && file_exists("uploads/" . $student['profileImg']))
+                        ? "uploads/" . $student['profileImg']
+                        : "img/profileIcon.png";
                     ?>
                     <img src="<?= $profileImage . '?v=' . time() ?>" class="profile-img" alt="Student Picture">
-                    <?php
-                        echo "<h3>" . $student['fullName'] . "</h3>";
-                        echo "<p><strong>البريد الإلكتروني:</strong> " . htmlspecialchars($student['email']) . "</p>"; 
-                        echo "<p><strong>الكلية:</strong> " . htmlspecialchars($student['college']) . "</p>"; 
-                        echo "<p><strong>المستوى الدراسي:</strong> " . htmlspecialchars($student['studyingLevel']) . "</p>"; 
-                        echo "<p><strong>نبذة:</strong> " . nl2br($student['bio']) . "</p>"; 
-                    ?>
+
+                    <h3><?= $student['fullName'] ?></h3>
+                    <p><strong>البريد الإلكتروني:</strong> <span style="direction: ltr; text-align: left; display: inline-block;"><?= htmlspecialchars($student['email']) ?></span></p>
+                    <p><strong>الكلية:</strong> <?= htmlspecialchars($student['college']) ?></p>
+                    <p><strong>المستوى الدراسي:</strong> <?= htmlspecialchars($student['studyingLevel']) ?></p>
+                    <p><strong>نبذة:</strong> <?= nl2br($student['bio']) ?></p>
+
                     <form action="student-edit.php" method="get">
                         <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button>
                     </form>
@@ -439,12 +441,17 @@ while ($row = $volunteerResult->fetch_assoc()) {
                     <form action="student-profile.php" method="post">
                         <div class="form-group">
                             <label for="committee">اللجنة:</label>
-                            <select class="form-control" id="committee" name="committee" required>
-                                <option value="" disabled selected>اختر اللجنة</option>
-                                <?php foreach ($committees as $committee): ?>
-                                    <option value="<?= $committee ?>"><?= $committee ?></option>
-                                <?php endforeach; ?>
+                            <select class="form-control" id="committee" name="committee" required <?= empty($committees) ? 'disabled' : '' ?>>
+                                <?php if (empty($committees)): ?>
+                                    <option value="">أنت لست ضمن أي لجنة حالياً</option>
+                                <?php else: ?>
+                                    <option value="" disabled selected>اختر اللجنة</option>
+                                    <?php foreach ($committees as $committee): ?>
+                                        <option value="<?= $committee ?>"><?= $committee ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </select>
+
                         </div>
 
                         <div class="form-group">
@@ -487,6 +494,11 @@ while ($row = $volunteerResult->fetch_assoc()) {
                         <td><?= $entry['totalHours'] ?></td>
                     </tr>
                 <?php endforeach; ?>
+                <?php if (empty($volunteerEntries)): ?>
+                    <tr>
+                        <td colspan="4">لا توجد ساعات تطوعية مسجلة حتى الآن.</td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
 
