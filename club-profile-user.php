@@ -1,9 +1,9 @@
 <?php
 session_start();
-include_once 'db_connection.php';
+include 'db_connection.php';
 
-if (!empty($_GET['ClubID']) && ctype_digit($_GET['ClubID'])) {
-    $clubID = intval($_GET['ClubID']); 
+if (!empty($_GET['id']) && ctype_digit($_GET['id'])) {
+    $clubID = intval($_GET['id']);
 
     $sql = "SELECT clubName, clubVision, image, clubAccount FROM adminuser WHERE ClubID = ?";
     $stmt = $conn->prepare($sql);
