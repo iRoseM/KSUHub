@@ -37,6 +37,29 @@ if (!empty($_GET['id']) && ctype_digit($_GET['id'])) {
         $events = [];
     }
 
+    //Ar
+    // for the join form
+    $isAlreadyApplied = false;
+    $applicationStatus = '';
+
+    if (isset($_SESSION['user_email'])) {
+        $email = $_SESSION['user_email'];
+
+        $checkSql = "SELECT status FROM membership WHERE email = ? AND clubID = ?";
+        $checkStmt = $conn->prepare($checkSql);
+        $checkStmt->bind_param("si", $email, $clubID);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
+
+        if ($checkResult->num_rows > 0) {
+            $isAlreadyApplied = true;
+            $applicationStatus = $checkResult->fetch_assoc()['status'];
+        }
+
+        $checkStmt->close();
+    }
+    //
+
     $stmt->close();
     $stmtEvents->close();
 } else {
@@ -45,20 +68,24 @@ if (!empty($_GET['id']) && ctype_digit($_GET['id'])) {
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clubID'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clubID'], $_POST['committee'])) {
     $clubID = intval($_POST['clubID']); 
 
     if ( isset($_SESSION['user_email'])) {
         $email = $_SESSION['user_email'];
+        $committee = $_POST['committee'];
 
-        $insertSql = "INSERT INTO membership (email, clubID, status) VALUES (?, ?, ?)";
+        $insertSql = "INSERT INTO membership (email, clubID, status, committee) VALUES (?, ?, ?, ?)";
         $insertStmt = $conn->prepare($insertSql);
         $status = 'pending';
 
-        $insertStmt->bind_param("sss", $email, $clubID, $status);
+        $insertStmt->bind_param("ssss", $email, $clubID, $status, $committee);
 
         if ($insertStmt->execute()) {
-            echo "تم ارسال طلبك بنجاح! ";
+            $_SESSION['success_message'] = "تم ارسال طلبك بنجاح!";
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit;
+
         } else {
             echo "حدث خطأ أثناء الانضمام. يرجى المحاولة مرة أخرى.";
         }
@@ -67,9 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clubID'])) {
     } else {
         echo "لم يتم العثور على بيانات المستخدم في السيشن.";
     }
-    $conn->close();
-
-
 }
 
 
@@ -184,6 +208,20 @@ $conn->close();
                 </div>
             </div>
         </div>
+            
+        
+        <!--Ar-->
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div style="margin: 80px auto 0; max-width: 600px;">
+                <div class="alert alert-success alert-success-message text-center" role="alert">
+                    <?php 
+                        echo $_SESSION['success_message']; 
+                        unset($_SESSION['success_message']);
+                    ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <!--Ar-->
 
         <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 6rem;">
             <a id="joinButton" class="main-button icon-button" href="#">! أنضم الينا</a>
@@ -228,6 +266,43 @@ $conn->close();
         </div>
     </div>
 
+    <!--Ar-->
+    <div id="joinSection" class="center-btn-container" style="display: flex; justify-content: center; margin-top: 6rem;">
+        <?php if ($isAlreadyApplied): ?>
+            <div class="alert alert-info text-center" role="alert" style="font-family: 'Noto Kufi Arabic', sans-serif; padding: 20px 25px; border-radius: 12px; font-size: 18px; direction: rtl;">
+                لقد قمت بالتقديم لهذا النادي مسبقًا.
+                <br>
+                <span style="font-weight: bold;">حالة الطلب:</span>
+                <span style="color: #0056b3;">
+                    <?php
+                        if ($applicationStatus === 'Pending') echo 'قيد المراجعة';
+                        elseif ($applicationStatus === 'Approved') echo 'مقبول';
+                        elseif ($applicationStatus === 'Rejected') echo 'مرفوض';
+                        else echo htmlspecialchars($applicationStatus);
+                    ?>
+                </span>
+            </div>
+
+        <?php else: ?>
+            <form id="joinForm" method="POST" action="" style="display: flex; flex-direction: row-reverse; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <input type="hidden" name="clubID" value="<?php echo $clubID; ?>">
+
+                <select id="committee" name="committee" required 
+                    style="padding: 10px 20px; border-radius: 8px; border: 1px solid #ccc; font-family: 'Noto Kufi Arabic', sans-serif; background-color: #fff; color: #333;">
+                    <option value="">-- اختر لجنة --</option>
+                    <option value="العلاقات العامة">العلاقات العامة</option>
+                    <option value="التقنية">التقنية</option>
+                    <option value="المحتوى">المحتوى</option>
+                    <option value="التصميم">التصميم</option>
+                    <option value="الإعلام">الإعلام</option>
+                </select>
+
+                <button type="submit" id="joinButton" class="main-button icon-button">تقديم طلب الانضمام</button>
+            </form>
+        <?php endif; ?>
+    </div>
+    <!--Ar-->
+    
     <!-- Club Events -->
     <div class="container">
         <div class="row">
@@ -288,6 +363,7 @@ $conn->close();
 
 
     <script>
+        /*
     document.getElementById('joinButton').addEventListener('click', function() {
         var clubID = <?php echo $clubID; ?>; // Get the ClubID dynamically from PHP
         // Send the AJAX request to PHP to insert the user into the club_members table
@@ -301,6 +377,26 @@ $conn->close();
         };
         xhr.send('clubID=' + clubID);
     });
+    */
+
+    //Ar
+    // Auto-hide only the success alert after 4 seconds
+    setTimeout(() => {
+        const successAlert = document.querySelector('.alert-success-message');
+        if (successAlert) successAlert.style.display = 'none';
+    }, 4000);
+
+
+    // Scroll to the form when the user clicks "! أنضم الينا"
+    document.getElementById('joinButton').addEventListener('click', function (e) {
+        e.preventDefault();
+        const formSection = document.getElementById('joinSection');
+        if (formSection) formSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+
+
+
 </script>
 
 </body>
