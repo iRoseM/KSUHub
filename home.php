@@ -153,7 +153,6 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
     echo '<p>There is no clubs right now</p>';
 }
 
-$conn->close();
 ?>
  </div>
 
@@ -168,51 +167,51 @@ $conn->close();
                 
                 <!--Events-->
                 <?php
-                include 'db_connection.php';
+    // Get total number of events first
+    $count_result = $conn->query("SELECT COUNT(*) as total FROM event");
+    $total = $count_result->fetch_assoc()['total'];
 
-                // rotate events every 3 days
-                $offset = floor((time() - strtotime('2024-01-01')) / (3 * 86400));
-                $event_sql = "SELECT * FROM event LIMIT 1 OFFSET $offset";
-                $event_result = $conn->query($event_sql);
+    if ($total > 0) {
+        // Loop back around using modulo
+        $offset = floor((time() - strtotime('2024-01-01')) / (3 * 86400)) % $total;
 
-                if ($event_result->num_rows > 0) {
-                    $event = $event_result->fetch_assoc();
-                    ?>
+        $event_sql = "SELECT * FROM event LIMIT 1 OFFSET $offset";
+        $event_result = $conn->query($event_sql);
 
-                    <div id="cta" class="section">
-                        <!-- Background Image -->
-                        <div class="bg-image bg-parallax overlay" style="background-image:url(uploads/<?= $event['image'] ?>)"></div>
-
-                        <!-- container -->
-                        <div class="container">
-                            <!-- row -->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h2 class="white-text"><?= $event['eventName'] ?></h2>
-                                    <p class="lead white-text"><?= $event['eventDescription'] ?></p>
-                                    <a class="main-button icon-button" href="club-profile-user.php?id=<?= $event['clubID'] ?>">!إذهب لصفحة النادي</a>
-                                </div>
-                            </div>
+        if ($event_result->num_rows > 0) {
+            $event = $event_result->fetch_assoc();
+?>
+            <div id="cta" class="section">
+                <!-- Background Image -->
+                <div class="bg-image bg-parallax overlay" style="background-image:url(uploads/<?= $event['image'] ?>)"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h2 class="white-text"><?= $event['eventName'] ?></h2>
+                            <p class="lead white-text"><?= $event['eventDescription'] ?></p>
+                            <a class="main-button icon-button" href="club-profile-user.php?id=<?= $event['clubID'] ?>">!إذهب لصفحة النادي</a>
                         </div>
                     </div>
+                </div>
+            </div>
+<?php
+        }
+    } else {
+?>
+    <div id="cta" class="section" style="background: linear-gradient(135deg, #276880 , #cce5f3);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="white-text">⏳</h2>
+                    <p class="lead white-text">ترقبوا جديد سعود!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
+    }
+?>
 
-                <?php
-                } else {
-                    ?>
-
-                    <div id="cta" class="section" style="background: linear-gradient(135deg, #276880 , #cce5f3);">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h2 class="white-text">⏳</h2>
-                                    <p class="lead white-text">ترقبوا جديد سعود!</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php
-                }
-                ?>
 				
 		<div id="why-us" class="section">
 			
