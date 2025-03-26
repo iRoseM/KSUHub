@@ -212,33 +212,43 @@
 
 <body>
     <header id="header" class="transparent-nav">
-        <div class="head-container">
-            <div class="navbar-header">
-                <!-- Logo -->
-                <div class="navbar-brand">
-                    <a class="logo" href="home.html">
-                        <img src="./img/logo-alt.png" alt="logo">
-                    </a>
+                <div class="head-container">
+                    <div class="navbar-header">
+                        <!-- Logo -->
+                        <div class="navbar-brand">
+                            <a class="logo" href="home.php">
+                                <img src="./img/logo-alt.png" alt="logo">
+                            </a>
+                        </div>
+                        <!-- Mobile toggle -->
+                        <button class="navbar-toggle">
+                            <span></span>
+                        </button>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav id="nav">
+                        <ul class="main-menu nav navbar-nav navbar-right">
+                            <li><a href="home.php">الصفحة الرئيسية</a></li> 
+                            <li><a href="clubs.php">النوادي</a></li> 
+                                <!-- Show profile link based on user type -->
+                                <?php if($_SESSION['user_type'] == "student"): ?>
+                                    <li><a href="student-profile.php">الملف الشخصي</a></li>
+                                <?php else: ?>
+                                    <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                                <?php endif; ?>
+
+                                <!-- Logout button (only for logged-in users) -->
+                                <li class="logout-item">
+                                    <a href="logout.php" class="logout-button">
+                                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                                    </a>
+                                </li>
+                        </ul>
+                    </nav>
                 </div>
-
-                <!-- Mobile toggle -->
-                <button class="navbar-toggle">
-                    <span></span>
-                </button>
-            </div>
-
-            <!-- Navigation -->
-            <nav id="nav">
-                <ul class="main-menu nav navbar-nav navbar-right">
-                    <li><a href="home.html">الصفحة الرئيسية</a></li>
-                    <li><a href="clubs.html"> النوادي</a></li>
-                    <li><a href="student-profile.php">الملف الشخصي</a></li>
-                
-                    <li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+            </header>
+            
     <div style="direction: rtl;">
 
         <!-- Hero Area -->

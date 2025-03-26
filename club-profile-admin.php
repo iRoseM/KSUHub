@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 session_start();
 $clubID = $_SESSION['ClubID'];
 include 'db_connection.php';
@@ -10,9 +12,6 @@ if (!isset($_SESSION['user_email']) || $_SESSION['user_type'] != "clubAdmin") {
     exit();
 }*/
 
-
-?>
-<?php
 if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
     $clubID = intval($_SESSION['ClubID']); 
 
@@ -89,13 +88,13 @@ $requestsResult = $stmt->get_result();
     <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
 
     <!-- Bootstrap -->
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
 
     <!-- Font Awesome Icon -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
 
     <!-- Custom stylesheet -->
-    <link type="text/css" rel="stylesheet" href="css/style.css"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
 
     <!-- Arabic font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,7 +128,23 @@ $requestsResult = $stmt->get_result();
             transform: scale(1.1);
             transition: all 0.2s;
         }
-
+        
+        .editclubbtn{
+            background-color: #FF6700;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center;
+            margin-top: 15px; 
+        }
+        .editclubbtn:hover{
+            background-color: #d55a00;
+        }
 
         
 
@@ -138,33 +153,43 @@ $requestsResult = $stmt->get_result();
 
 <body>
     <header id="header" class="transparent-nav">
-        <div class="head-container">
-            <div class="navbar-header">
-                <!-- Logo -->
-                <div class="navbar-brand">
-                    <a class="logo" href="home.html">
-                        <img src="./img/logo-alt.png" alt="logo">
-                    </a>
+                <div class="head-container">
+                    <div class="navbar-header">
+                        <!-- Logo -->
+                        <div class="navbar-brand">
+                            <a class="logo" href="home.php">
+                                <img src="./img/logo-alt.png" alt="logo">
+                            </a>
+                        </div>
+                        <!-- Mobile toggle -->
+                        <button class="navbar-toggle">
+                            <span></span>
+                        </button>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav id="nav">
+                        <ul class="main-menu nav navbar-nav navbar-right">
+                            <li><a href="home.php">الصفحة الرئيسية</a></li>
+                            <li><a href="clubs.php">النوادي</a></li> 
+                                <!-- Show profile link based on user type -->
+                                <?php if($_SESSION['user_type'] == "student"): ?>
+                                    <li><a href="student-profile.php">الملف الشخصي</a></li>
+                                <?php else: ?>
+                                    <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                                <?php endif; ?>
+
+                                <!-- Logout button (only for logged-in users) -->
+                                <li class="logout-item">
+                                    <a href="logout.php" class="logout-button">
+                                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                                    </a>
+                                </li>
+                        </ul>
+                    </nav>
                 </div>
-
-                <!-- Mobile toggle -->
-                <button class="navbar-toggle">
-                    <span></span>
-                </button>
-            </div>
-
-            <!-- Navigation -->
-            <nav id="nav">
-                <ul class="main-menu nav navbar-nav navbar-right">
-                    <li><a href="home.html">الصفحة الرئيسية</a></li>
-                    <li><a href="clubs.html">النوادي</a></li>
-                    <li><a href="student-profile.php">الملف الشخصي</a></li>
-                    <li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
-                </ul>
-            </nav>
-
-        </div>
-    </header>
+            </header>
+            
 
     <div id="club-home" class="hero-area">
         <!-- Background Image -->
@@ -179,8 +204,14 @@ $requestsResult = $stmt->get_result();
                 </div>
             </div>
         </div>
+        <div class="btn-container" style="display: flex; justify-content: right;  margin-top: 23rem; margin-right: 5px;">
+            <form action="edit-club-profile.php" method="POST">
+                <button type="submit" class="editclubbtn">تعديل ملف النادي</button>
+            </form>
+        </div>
 
-        <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 60rem;">
+        <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 10rem;">
+            
             <a class="main-button icon-button" href="#membership-requests">طلبات العضوية</a>
             <a class="main-button icon-button" href="#members">لمحة عن الأعضاء</a>
         </div>
