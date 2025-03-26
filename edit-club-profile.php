@@ -5,6 +5,49 @@ session_start();
 $clubID = $_SESSION['ClubID'];
 include 'db_connection.php';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteClub'])) {
+    $delete_sql = "DELETE FROM adminuser WHERE clubID = ?";
+    $stmt = $conn->prepare($delete_sql);
+    $stmt->bind_param("i", $clubID);
+
+    if ($stmt->execute()) {
+        session_destroy();
+        header("Location: clubs.php"); // redirect after deletion
+        exit();
+    } else {
+        echo "<script>alert('حدث خطأ أثناء حذف النادي.');</script>";
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addEvent'])) {
+    $eventName = $_POST['eventName'];
+    $eventDescription = isset($_POST['eventDescription']) ? $_POST['eventDescription'] : null;
+    $eventDate = !empty($_POST['date']) ? $_POST['date'] : null;
+    $eventTime = !empty($_POST['time']) ? $_POST['time'] : null;
+    $clubID = $_SESSION['ClubID'];
+
+    // Handle image upload if provided
+    $imagePath = null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        $imageName = time() . '_' . basename($_FILES['image']['name']);
+        $targetPath = $uploadDir . $imageName;
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+            $imagePath = $imageName;
+        }
+    }
+
+    $stmt = $conn->prepare("INSERT INTO event (clubID, eventName, eventDescription, date, time, image) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssss", $clubID, $eventName, $eventDescription, $eventDate, $eventTime, $imagePath);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('تمت إضافة الفعالية بنجاح!');</script>";
+    } else {
+        echo "<script>alert('حدث خطأ أثناء إضافة الفعالية.');</script>";
+    }
+}
+
+
 // Check if the user is logged in and is a student
 /*
 if (!isset($_SESSION['user_email']) || $_SESSION['user_type'] != "clubAdmin") {
@@ -152,6 +195,7 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
         .edit-profile-btn:hover {
             background-color: #d55a00;
         }
+
 
         .volunteer-form .form-group {
             margin-bottom: 15px;
@@ -309,34 +353,48 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
                     <p><strong>الرؤية:</strong> <?php echo $clubVision; ?></p>
                     <p><strong>الرسالة:</strong> <?php echo $clubGoal; ?></p>
                     <p><strong>حساب النادي:</strong> <a href="<?php echo $clubAccount; ?>" target="_blank"><?php echo $clubAccount; ?></a></p>
-                    <form action="edit-club-profile.php" method="post">
+                    <form action="club-edit.php" method="post">
+                        <input type="hidden" name="form_type" value="edit">
                         <button type="submit" class="edit-profile-btn">تعديل الملف الشخصي</button> <br> <br>
-                        <button type="submit" class="edit-profile-btn" onclick="return confirm('هل أنت متأكد من حذف النادي؟');">حذف النادي</button>
                     </form>
+                    <form method="post" onsubmit="return confirm('هل أنت متأكد من حذف النادي؟');" style="margin-top: 10px;">
+                        <input type="hidden" name="deleteClub" value="1">
+                        <button type="submit" class="edit-profile-btn" style="background-color:rgb(207, 39, 24);;">حذف النادي</button>
+                    </form>
+
                 </div>
             </div>
 
             <div class="col-md-8">
                 <div class="volunteer-form">
                     <h3>إضافة فعالية للنادي</h3>
-                    <form>
-                       
-
-                        <div id="extra-fields">
-                            <div class="form-group">
-                                <label for="hours">اسم الفعالية:</label>
-                                <input type="text" class="form-control" id="hours" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="date">التاريخ:</label>
-                                <input type="date" class="form-control" id="date" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="workDescription">تفاصيل الفعالية:</label>
-                                <textarea class="form-control" id="workDescription" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="btn main-button">إضافة </button>
+                    <form method="POST" action="edit-club-profile.php" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="eventName"><span style="color: red;">*</span>اسم الفعالية:</label>
+                            <input type="text" class="form-control" id="eventName" name="eventName" required>
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="date">التاريخ:</label>
+                            <input type="date" class="form-control" id="date" name="date">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="time">الوقت:</label>
+                            <input type="time" class="form-control" id="time" name="time">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eventDescription">تفاصيل الفعالية:</label>
+                            <textarea class="form-control" id="eventDescription" name="eventDescription" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">صورة الفعالية:</label>
+                            <input type="file" class="form-control" name="image" id="image">
+                        </div>
+
+                        <button type="submit" class="btn main-button" name="addEvent">إضافة</button>
                     </form>
                 </div>
             </div>
