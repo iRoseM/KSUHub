@@ -111,6 +111,7 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
             text-align: right;
             background-color: #f8f9fa; /* Light background for better contrast */
         }
+        
 
         /* Hero Section */
         .hero-area {
@@ -128,6 +129,16 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        /* Force LTR for navbar only */
+        .main-menu {
+            direction: ltr !important; /* Force text direction */
+            justify-content: flex-end; 
+        }
+
+        /* Revert list item order */
+        .main-menu > li {
+            direction: rtl;
         }
 
         /* Profile & Form Layout */
@@ -310,8 +321,8 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
                     <!-- Navigation -->
                     <nav id="nav">
                         <ul class="main-menu nav navbar-nav navbar-right">
-                            <li><a href="home.php">الصفحة الرئيسية</a></li> <!-- Changed to .php -->
-                            <li><a href="clubs.php">النوادي</a></li> <!-- Changed to .php -->
+                            <li><a href="home.php">الصفحة الرئيسية</a></li>
+                            <li><a href="clubs.php">النوادي</a></li>
                                 <!-- Show profile link based on user type -->
                                 <?php if($_SESSION['user_type'] == "student"): ?>
                                     <li><a href="student-profile.php">الملف الشخصي</a></li>
@@ -419,10 +430,14 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
 					<!-- footer nav -->
 					<div class="col-md-6">
 						<ul class="footer-nav">
-							<li><a href="home.html">الصفحة الرئيسية</a></li>
-							<li><a href="clubs.html"> النوادي</a></li>
-							<li><a href="student-profile.php">الملف الشخصي</a></li>
-							<li><a href="contact.html">تواصل معنا</a></li>
+							<li><a href="home.php">الصفحة الرئيسية</a></li> 
+                                                        <li><a href="clubs.php">النوادي</a></li>
+                                                            <!-- Show profile link based on user type -->
+                                                            <?php if($_SESSION['user_type'] == "student"): ?>
+                                                                <li><a href="student-profile.php">الملف الشخصي</a></li>
+                                                            <?php else: ?>
+                                                                <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                                                            <?php endif; ?>
 						</ul>
 					</div>
 				</div>

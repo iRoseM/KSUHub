@@ -354,8 +354,8 @@ while ($row = $volunteerResult->fetch_assoc()) {
                     <!-- Navigation -->
                     <nav id="nav">
                         <ul class="main-menu nav navbar-nav navbar-right">
-                            <li><a href="home.php">الصفحة الرئيسية</a></li> <!-- Changed to .php -->
-                            <li><a href="clubs.php">النوادي</a></li> <!-- Changed to .php -->
+                            <li><a href="home.php">الصفحة الرئيسية</a></li>
+                            <li><a href="clubs.php">النوادي</a></li>
                                 <!-- Show profile link based on user type -->
                                 <?php if($_SESSION['user_type'] == "student"): ?>
                                     <li><a href="student-profile.php">الملف الشخصي</a></li>
@@ -527,10 +527,14 @@ while ($row = $volunteerResult->fetch_assoc()) {
 					<!-- footer nav -->
 					<div class="col-md-6">
 						<ul class="footer-nav">
-							<li><a href="home.html">الصفحة الرئيسية</a></li>
-							<li><a href="clubs.html"> النوادي</a></li>
-							<li><a href="student-profile.php">الملف الشخصي</a></li>
-							<li><a href="contact.html">تواصل معنا</a></li>
+							<li><a href="home.php">الصفحة الرئيسية</a></li> 
+                                                        <li><a href="clubs.php">النوادي</a></li>
+                                                            <!-- Show profile link based on user type -->
+                                                            <?php if($_SESSION['user_type'] == "student"): ?>
+                                                                <li><a href="student-profile.php">الملف الشخصي</a></li>
+                                                            <?php else: ?>
+                                                                <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                                                            <?php endif; ?>
 						</ul>
 					</div>
 				</div>
