@@ -1,18 +1,78 @@
 <?php
-include_once 'db_connection.php';
-include 'navbar.php.php';
-$sql = "SELECT clubName, clubVision, image , clubAccount FROM adminuser WHERE clubID = 1"; 
-$result = $conn->query($sql);
+session_start(); 
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $clubName = $row["clubName"];
-    $clubVision = $row["clubVision"];
-    $clubImage = $row["image"];
-    $clubAccount = $row["clubAccount"];
+include_once 'db_connection.php';
+
+if (!empty($_GET['ClubID']) && ctype_digit($_GET['ClubID'])) {
+    $clubID = intval($_GET['ClubID']); 
+
+    $sql = "SELECT clubName, clubVision, image, clubAccount FROM adminuser WHERE ClubID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $clubID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $clubName = $row["clubName"];
+        $clubVision = $row["clubVision"];
+        $clubImage = $row["image"];
+        $clubAccount = $row["clubAccount"];
+    } else {
+        echo "<p>النادي غير موجود</p>";
+        exit;
+    }
+
+    $sqlEvents = "SELECT eventName, eventDescription, image FROM event WHERE clubID = ?";
+    $stmtEvents = $conn->prepare($sqlEvents);
+    $stmtEvents->bind_param("i", $clubID);
+    $stmtEvents->execute();
+    $resultEvents = $stmtEvents->get_result();
+
+    if ($resultEvents->num_rows > 0) {
+        $events = [];
+        while ($event = $resultEvents->fetch_assoc()) {
+            $events[] = $event;
+        }
+    } else {
+        $events = [];
+    }
+
+    $stmt->close();
+    $stmtEvents->close();
 } else {
-    echo "error";
+    echo "<p>ID غير صحيح</p>";
+    exit;
 }
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['clubID'])) {
+    $clubID = intval($_POST['clubID']); 
+
+    if ( isset($_SESSION['user_email'])) {
+        $email = $_SESSION['user_email'];
+
+        $insertSql = "INSERT INTO membership (email, clubID, status) VALUES (?, ?, ?)";
+        $insertStmt = $conn->prepare($insertSql);
+        $status = 'pending';
+
+        $insertStmt->bind_param("sss", $email, $clubID, $status);
+
+        if ($insertStmt->execute()) {
+            echo "تم ارسال طلبك بنجاح! ";
+        } else {
+            echo "حدث خطأ أثناء الانضمام. يرجى المحاولة مرة أخرى.";
+        }
+
+        $insertStmt->close();
+    } else {
+        echo "لم يتم العثور على بيانات المستخدم في السيشن.";
+    }
+    $conn->close();
+
+
+}
+
 
 $conn->close();
 ?>
@@ -23,7 +83,7 @@ $conn->close();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>KSUHub | ملف النادي</title>
-    
+
     <!-- tab icon -->
     <link rel="icon" href="img/KSUHub2.png" type="image/x-icon">
 
@@ -40,6 +100,7 @@ $conn->close();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+
     <style> 
         /* Members & Requests */
         html {
@@ -74,7 +135,6 @@ $conn->close();
 <body>
     <header id="header" class="transparent-nav">
         <div class="head-container">
-
             <div class="navbar-header">
                 <!-- Logo -->
                 <div class="navbar-brand">
@@ -93,9 +153,8 @@ $conn->close();
             <nav id="nav">
                 <ul class="main-menu nav navbar-nav navbar-right">
                     <li><a href="home.html">الصفحة الرئيسية</a></li>
-                    <li><a href="clubs.html"> النوادي</a></li>
+                    <li><a href="clubs.html">النوادي</a></li>
                     <li><a href="student-profile.php">الملف الشخصي</a></li>
-                
                     <li class="logout-item"><a href="logout.php" class="logout-button" style="margin-right: 0;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
                 </ul>
             </nav>
@@ -104,157 +163,136 @@ $conn->close();
     </header>
 
     <div id="club-home" class="hero-area">
-        <!-- Backgound Image -->
+        <!-- Background Image -->
         <div class="bg-image bg-parallax overlay" style="background-image:url(uploads/<?php echo $clubImage; ?>); background-size: cover; background-position: center; background-repeat: no-repeat; height: 80vh; width: 100%;"></div>
-        <!-- /Backgound Image -->
+        <!-- /Background Image -->
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8" style="margin-top: 40rem;">
-                        <h1 class="white-text"><?php echo "مرحبا بكم في " . $clubName; ?></h1>
-                        <p class="lead white-text">Join us and be part of a great community.</p>
-                    </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8" style="margin-top: 40rem;">
+                    <h1 class="white-text"><?php echo "مرحبا بكم في " . $clubName; ?></h1>
+                    <p class="lead white-text">Join us and be part of a great community.</p>
                 </div>
             </div>
+        </div>
 
         <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 6rem;">
-            <a class="main-button icon-button" href="#">! أنضم الينا  </a>
+            <a id="joinButton" class="main-button icon-button" href="#">! أنضم الينا</a>
         </div>
         
         <!-- About -->
-		<div id="about" class="section">
+        <div id="about" class="section">
+            <!-- container -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="section-header">
+                            <h2>رؤيتنا</h2>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-content">
+                                <h4>الرؤية :</h4>
+                                <p><?php echo $clubVision; ?></p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-content">
+                                <h4>الرسالة:</h4>
+                                <p>نهتم بتنمية مهارات الطالب التقنية والاجتماعية وغرس مفاهيم المبادرة والقيم الاخلاقيه التي تساهم في الواقع العملي.</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-content">
+                                <h4>حساب النادي على منصة X :</h4>
+                                <p><?php echo $clubAccount; ?></p>
+                            </div>
+                        </div>
+                    </div>
 
-			<!-- container -->
-			<div class="container">
-				<div class="row">
-
-					<div class="col-md-6" >
-						<div class="section-header">
-							<h2>رؤيتنا</h2>
-						</div>
-						<div class="feature">
-							<div class="feature-content">
-								<h4>الرؤية :</h4>
-								<p><?php echo $clubVision; ?></p>
-							</div>
-						</div>
-						<div class="feature">
-							<div class="feature-content">
-								<h4>الرسالة:</h4>
-								<p>نهتم بتنمية مهارات  الطالب التقنية والاجتماعية وغرس مفاهيم المبادرة والقيم الاخلاقيه التي تساهم في الواقع العملي .</p>
-							</div>
-						</div>
-						<div class="feature">
-							<div class="feature-content">
-								<h4>حساب النادي على منصة X :</h4>
-								<p> <?php echo $clubAccount; ?> </p>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-6">
-						<div class="about-img">
-
-                        
-							<img src="uploads/<?php echo $clubImage; ?>" alt="Logo">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+                    <div class="col-md-6">
+                        <div class="about-img">
+                            <img src="uploads/<?php echo $clubImage; ?>" alt="Logo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-       <!-- container -->
-    <div class="container">
 
-        <!-- row -->
+    <!-- Club Events -->
+    <div class="container">
         <div class="row">
             <div class="section-header text-center">
-                <h2>فعاليات النادي </h2>
+                <h2>فعاليات النادي</h2>
             </div>
         </div>
-        <!-- /row -->
 
-        <!-- /Inner-Clubs -->
         <div id="clubs-wrapper">
-
-            <!-- row -->
-            <div class="row justify-content-center"> <!-- Added justify-content-center -->
-
-                <!-- single Club -->
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <div class="club">
-                        <a href="#" class="club-img">
-                            <img src="./img/kanaba.png" alt="">
-                            <i class="club-link-icon fa fa-link"></i>
-                        </a>
-                        <a class="club-title" href="#">فعالية كنبة </a>
-                        <div class="club-details">
-                            <span class="club-category"> فعالية "كنبة" هي لقاء حواري مُلهم يُقام داخل النادي، حيث يتم استضافة نخبة من دكتورات وأستاذات كلية علوم
-                                الحاسب والمعلومات. تهدف "كنبة" إلى تقديم فرصة للأعضاء للتواصل المباشر مع الشخصيات
-                                الأكاديمية البارزة، والاستفادة من خبراتهن في بيئة حوارية محفزة وملهمة.</span>
-                            <span class="club-price club-free">Opened</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- /single Club -->
-
-                <!-- single Club -->
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <div class="club">
-                        <a href="#" class="club-img" style="background-color:rgb(209, 127, 127);">
-                            <img src="./img/Eid.png" alt="">
-                            <i class="club-link-icon fa fa-link"></i>
-                        </a>
-                        <a class="club-title" href="#"> فعالية عيد </a>
-                        <div class="club-details">
-                            <span class="club-category">فعالية "عيد" هي احتفالية مميزة تُقام خلال الفصل الدراسي بعد
-                                عيد الفطر، حيث تُعنى اللجنة المسؤولة بتنظيم الفعالية من الألف
-                                إلى الياء</span>
-                            <span class="club-price club-free">Opened</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="row justify-content-center">
+                <?php
+                if (!empty($events)) {
+                    foreach ($events as $event) {
+                        echo "
+                        <div class='col-md-3 col-sm-6 col-xs-6'>
+                            <div class='club'>
+                                <a href='#' class='club-img'>
+                                    <img src='uploads/{$event['image']}' alt=''>
+                                    <i class='club-link-icon fa fa-link'></i>
+                                </a>
+                                <a class='club-title' href='#'>{$event['eventName']}</a>
+                                <div class='club-details'>
+                                    <span class='club-category'>{$event['eventDescription']}</span>
+                                    <span class='club-price club-free'>Opened</span>
+                                </div>
+                            </div>
+                        </div>";
+                    }
+                } else {
+                    echo "<p>لا توجد فعاليات حالياً ل {$clubName}</p>";
+                }
+                ?>
             </div>
         </div>
     </div>
 
-<!-- Footer -->
-<footer id="footer" class="section">
-    <div class="container">
-        <div class="row">
-            <!-- footer logo -->
-            <div class="col-md-6">
-                <div class="footer-logo">
-                    <a class="logo" href="home.html">
-                        <img src="./img/logo.png" alt="logo">
-                    </a>
+    <footer id="footer" class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-logo">
+                        <a class="logo" href="home.html">
+                            <img src="./img/logo.png" alt="logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <ul class="footer-nav">
+                        <li><a href="home.html">الصفحة الرئيسية</a></li>
+                        <li><a href="clubs.html">النوادي</a></li>
+                        <li><a href="student-profile.php">الملف الشخصي</a></li>
+                        <li><a href="contact.html">تواصل معنا</a></li>
+                    </ul>
                 </div>
             </div>
-
-            <!-- footer nav -->
-            <div class="col-md-6">
-                <ul class="footer-nav">
-                    <li><a href="home.html">الصفحة الرئيسية</a></li>
-                    <li><a href="clubs.html"> النوادي</a></li>
-                    <li><a href="student-profile.php">الملف الشخصي</a></li>
-                    <li><a href="contact.html">تواصل معنا</a></li>
-                </ul>
-            </div>
         </div>
+    </footer>
 
-        <!-- row -->
-        <div id="bottom-footer" class="row">
 
-            <!-- copyright -->
-            <div class="col-md-8 col-md-pull-4">
-                <div class="footer-copyright" style="text-align: right;">
-                    <span>KSUHub &copy; | جميع الحقوق محفوظة حتى عام 2025</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</footer>
+    <script>
+    document.getElementById('joinButton').addEventListener('click', function() {
+        var clubID = <?php echo $clubID; ?>; // Get the ClubID dynamically from PHP
+        // Send the AJAX request to PHP to insert the user into the club_members table
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '', true); // Send to the same page
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert(xhr.responseText); // Show success or failure message
+            }
+        };
+        xhr.send('clubID=' + clubID);
+    });
+</script>
 
 </body>
 </html>

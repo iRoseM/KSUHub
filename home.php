@@ -7,11 +7,11 @@ ini_set('display_errors','1');
 session_start();
 include 'db_connection.php';
 
-
+/*
 if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["student", "clubAdmin"])) {
     header("Location: index.html");
     exit();
-}
+}*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,53 +108,54 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
                         </div>
 
                         <div id="clubs-wrapper">
-                            <?php
-                            include 'db_connection.php';
+						<?php
+                          $sql = "SELECT ClubID, clubName, clubCollege, image FROM adminuser LIMIT 8";  
+                          $result = $conn->query($sql);
 
-                            $sql = "SELECT * FROM adminuser LIMIT 8";  // Get first 8 clubs
-                            $result = $conn->query($sql);
+                          if ($result->num_rows > 0) {
+                              echo '<div class="row">';
 
-                            if ($result->num_rows > 0) {
-                                $i = 0;
-                                echo '<div class="row">';
+                             while ($club = $result->fetch_assoc()) {
+                                $clubID = isset($club['ClubID']) ? intval($club['ClubID']) : 0;
 
-                                while($club = $result->fetch_assoc()) {
-                                    if ($i > 0 && $i % 4 == 0) {
-                                        echo '</div><div class="row">';  // Break the row into a new line after 4 items
-                                    }
-                                    ?>
+                                    if ($clubID > 0) {
+                                        $clubLink = "club-profile-user.php?ClubID=" . $clubID;
+                                  } else {
+                                     $clubLink = "#";
+                                       }
+                         ?>
 
-                                    <div class="col-md-3 col-sm-6 col-xs-6">
-                                        <div class="club">
-                                            <!-- Club Image -->
-                                            <a href="#" class="club-img" style=" width: 100%; height: 200px;">
-                                                <!-- Dynamically display club logo -->
-                                                <img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?> logo">
-                                                <i class="club-link-icon fa fa-link"></i>
-                                            </a>
+        <div class="col-md-3 col-sm-6 col-xs-6">
+            <div class="club">
+                <!-- Club Image -->
+                <a href="<?= $clubLink ?>" class="club-img" style="width: 100%; height: 200px;">
+                    <img src="uploads/<?= htmlspecialchars($club['image']) ?>" alt="<?= htmlspecialchars($club['clubName']) ?> logo">
+                    <i class="club-link-icon fa fa-link"></i>
+                </a>
 
-                                            <!-- Club Title -->
-                                            <a class="club-title" href="#"> 
-                                                <?= $club['clubName'] ?>  <!-- Club Name -->
-                                            </a>
+                <!-- Club Title -->
+                <a class="club-title" href="<?= $clubLink ?>"> 
+                    <?= htmlspecialchars($club['clubName']) ?>  
+                </a>
 
-                                            <!-- Club Description/Goal -->
-                                            <div class="club-details">
-                                                <span class="club-category"><?= $club['clubCollege'] ?></span> <!-- Club Goal -->
-                                            </div>
-                                        </div>
-                                    </div>
+                <!-- Club Description/Goal -->
+                <div class="club-details">
+                    <span class="club-category"><?= htmlspecialchars($club['clubCollege']) ?></span> 
+                </div>
+            </div>
+        </div>
 
-                                    <?php
-                                    $i++;
-                                }
+        <?php
+    }
 
-                                echo '</div>';
-                            } else {
-                                echo '<p>لا توجد أندية متاحة حالياً.</p>';  // Display this message if no clubs are found
-                            }
-                            ?>
-                        </div>
+    echo '</div>';
+} else {
+    echo '<p>There is no clubs right now</p>';
+}
+
+$conn->close();
+?>
+ </div>
 
                         <!-- View All Clubs Button -->
                         <div class="row">

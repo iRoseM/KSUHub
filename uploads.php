@@ -12,6 +12,14 @@ $clubs = [
     8 => "img/cyberclub.png"
 ];
 
+$events = [
+    1 => "img/data-jam.png",   
+    2 => "img/data-jam.png",    
+    3 => "img/kanaba.png" ,  
+    4 => "img/Eid.png",  
+    5 => "img/ftc_talks.png"
+];
+
 // Define the upload directory
 $targetDirectory = "uploads/"; 
 
@@ -26,30 +34,39 @@ foreach ($clubs as $clubID => $originalImagePath) {
         // Update the image filename for adminuser table
         $sqlAdmin = "UPDATE adminuser SET image = '$uniqueFileName' WHERE clubID = $clubID";
 
-        // Update the image filename for events table
-       // $sqlEvent = "UPDATE events SET image = '$uniqueFileName' WHERE eventID = $clubID";
-
         // Execute SQL for updating the adminuser table
         if ($conn->query($sqlAdmin) === TRUE) {
             echo "Image stored successfully for adminuser clubID: $clubID as $uniqueFileName<br>";
         } else {
             echo "Failed to update the image filename for adminuser clubID: $clubID. Error: " . $conn->error . "<br>";
         }
+    } else {
+        echo "Failed to copy the image for clubID: $clubID<br>";
+    }
+}
+
+// Process each event and store their images
+foreach ($events as $eventID => $originalImagePath) {
+    // Generate a unique filename
+    $uniqueFileName = uniqid("event_Logo_") . ".png";
+    $targetPath = $targetDirectory . $uniqueFileName;
+
+    // Copy the image to the target folder
+    if (copy($originalImagePath, $targetPath)) {
+        // Update the image filename for events table
+        $sqlEvent = "UPDATE event SET image = '$uniqueFileName' WHERE eventID = $eventID";
 
         // Execute SQL for updating the events table
-       // if ($conn->query($sqlEvent) === TRUE) {
-         //   echo "Image stored successfully for event clubID: $clubID as $uniqueFileName<br>";
-        //} else {
-          //  echo "Failed to update the image filename for event clubID: $clubID. Error: " . $conn->error . "<br>";
-        //}
-    
-   } 
-    else {
-        echo "Failed to copy the image for clubID: $clubID<br>";
+        if ($conn->query($sqlEvent) === TRUE) {
+            echo "Image stored successfully for eventID: $eventID as $uniqueFileName<br>";
+        } else {
+            echo "Failed to update the image filename for eventID: $eventID. Error: " . $conn->error . "<br>";
+        }
+    } else {
+        echo "Failed to copy the image for eventID: $eventID<br>";
     }
 }
 
 // Close the database connection
 $conn->close();
 ?>
-     
