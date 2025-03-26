@@ -6,11 +6,11 @@
     // Database connection file
     $servername = "localhost"; 
     $username = "root";        
-    $password = "root";            // Your MySQL password (leave empty for default XAMPP)
+    $password = "";            // Your MySQL password (leave empty for default XAMPP)
     $database = "ksuhubdb";   
 
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $database, 8889);
+    $conn = new mysqli($servername, $username, $password, $database);
 
     // Check connection
     if ($conn->connect_error) {

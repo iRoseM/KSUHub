@@ -1,3 +1,8 @@
+<?php
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -110,51 +115,57 @@
 					<div id="main" class="col-md-9">
 						<p id="no-results" class="text-center" style="display: none; margin-top: 20px;">لا توجد نتائج مطابقة لبحثك</p>
 						<?php
-						include 'db_connection.php';
+include 'db_connection.php';
 
-						$sql = "SELECT * FROM adminuser";
-						
-						$college = isset($_GET['college']) ? $_GET['college'] : '';
-						if (!empty($college)) {
-							$college = $conn->real_escape_string($college);
-							if (strpos($sql, 'WHERE') !== false) {
-								$sql .= " AND affiliation LIKE '%$college%'";
-							} else {
-								$sql .= " WHERE affiliation LIKE '%$college%'";
-							}
-						}
-						$result = $conn->query($sql);
+$sql = "SELECT * FROM adminuser";
 
-						if ($result->num_rows > 0) {
-							while ($club = $result->fetch_assoc()) {
-								?>
-							<div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>" data-college="<?= strtolower($club['clubCollege']) ?>">
-								<div class="single-club">
-									<div class="club-img">
-										<a href="club-profile-user.php?id=<?= $club['clubID'] ?>" class="clubs-clubimg">
-											<img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?>">
-										</a>
-									</div>
-									<div class="club-name-container">
-										<a class="club-name" href="club-profile-user.php?id=<?= $club['clubID'] ?>">
-											<?= $club['clubName'] ?>
-										</a>
-									</div>
-									<div class="club-meta">
-										<span class="club-college"><?= $club['clubCollege'] ?></span>
-										<!-- <div class="pull-right">
-											<span class="club-meta-author" style="color: red; ">التسجيل مغلق</span>
-										</div> -->
-									</div>
-								</div>
-							</div>
+$college = isset($_GET['college']) ? $_GET['college'] : '';
+if (!empty($college)) {
+    $college = $conn->real_escape_string($college);
+    if (strpos($sql, 'WHERE') !== false) {
+        $sql .= " AND affiliation LIKE '%$college%'";
+    } else {
+        $sql .= " WHERE affiliation LIKE '%$college%'";
+    }
+}
+$result = $conn->query($sql);
 
-								<?php
-							}
-					} else {
-						echo '<p class="text-center">لا توجد أندية حالياً.</p>';
-					}
-					?>
+if ($result->num_rows > 0) {
+    while ($club = $result->fetch_assoc()) {
+        // استخراج ClubID وضمان أنه عدد صحيح
+        $clubID = isset($club['clubID']) ? intval($club['clubID']) : 0;
+
+        // تحقق من وجود ClubID وصياغة الرابط بناءً عليه
+        if ($clubID > 0) {
+            $clubLink = "club-profile-user.php?ClubID=" . $clubID;
+        } else {
+            $clubLink = "#";
+        }
+        ?>
+        <div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>" data-college="<?= strtolower($club['clubCollege']) ?>">
+            <div class="single-club">
+                <div class="club-img">
+                    <a href="<?= $clubLink ?>" class="clubs-clubimg">
+                        <img src="uploads/<?= $club['image'] ?>" alt="<?= $club['clubName'] ?>">
+                    </a>
+                </div>
+                <div class="club-name-container">
+                    <a class="club-name" href="<?= $clubLink ?>">
+                        <?= $club['clubName'] ?>
+                    </a>
+                </div>
+                <div class="club-meta">
+                    <span class="club-college"><?= $club['clubCollege'] ?></span>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+} else {
+    echo '<p class="text-center">لا توجد أندية حالياً.</p>';
+}
+?>
+
 						<!-- Pagination Container -->
 						<div class="row">
 							<div class="col-md-12">

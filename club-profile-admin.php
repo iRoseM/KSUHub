@@ -74,7 +74,41 @@ $requestsResult = $stmt->get_result();
     exit;
 }
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_POST['email'])) {
+    header("Content-Type: application/json"); // لضمان استجابة JSON
+
+    $email = $_POST['email'];
+    $status = ($_POST['action'] === 'accept') ? 'Approved' : 'Rejected';
+
+    $sql = "UPDATE membership SET status = ? WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $status, $email);
+    
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "تم تحديث الحالة بنجاح"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "حدث خطأ أثناء التحديث"]);
+    }
+    exit;
+}
+
+
+// استعلام جلب الأعضاء وطلبات العضوية
+$membersQuery = "SELECT s.fullName FROM membership m JOIN studentuser s ON m.email = s.email WHERE m.status = 'Approved' AND m.clubID = ?";
+$stmt = $conn->prepare($membersQuery);
+$stmt->bind_param("i", $clubID);
+$stmt->execute();
+$membersResult = $stmt->get_result();
+
+$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel, s.email FROM membership m JOIN studentuser s ON m.email = s.email WHERE m.status = 'Pending' AND m.clubID = ?";
+$stmt = $conn->prepare($requestsQuery);
+$stmt->bind_param("i", $clubID);
+$stmt->execute();
+$requestsResult = $stmt->get_result();
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -310,44 +344,58 @@ $requestsResult = $stmt->get_result();
                 </ul>
             </div>
         </div>
-    </div>
-
-    <div id="membership-requests" class="section">
-        <div class="container">
-            <div class="section-header text-center">
-                <h2>Membership Requests</h2>
-            </div>
-            <div class="row">
-                <?php if ($requestsResult->num_rows > 0): ?>
-                    <table class="table">
-                        <thead>
+    </div><div id="membership-requests" class="section py-5">
+    <div class="container">
+        <div class="section-header text-center mb-4">
+            <h2 class="fw-bold">Membership Requests</h2>
+        </div>
+        <div class="row justify-content-center">
+            <?php if ($requestsResult->num_rows > 0): ?>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center align-middle">
+                        <thead class="table-dark">
                             <tr>
-                                <th>Name</th>
-                                <th>College</th>
-                                <th>Level</th>
-                                <th>Actions</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">College</th>
+                                <th scope="col">Level</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php while ($row = $requestsResult->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['fullName']); ?></td>
-                                <td><?= htmlspecialchars($row['college']); ?></td>
-                                <td><?= htmlspecialchars($row['studyingLevel']); ?></td>
-                                <td>
-                                    <i class="fa fa-check text-success accept-request" style="cursor: pointer; margin-right: 15px;"></i>
-                                    <i class="fa fa-times text-danger reject-request" style="cursor: pointer;"></i>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['fullName']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['college']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['studyingLevel']); ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button class="btn btn-success accept-request" 
+                                                data-email="<?php echo htmlspecialchars($row['email']); ?>" 
+                                                aria-label="Accept request from <?php echo htmlspecialchars($row['fullName']); ?>">
+                                                ✔
+                                            </button>
+                                            <button class="btn btn-danger reject-request" 
+                                                data-email="<?php echo htmlspecialchars($row['email']); ?>" 
+                                                aria-label="Reject request from <?php echo htmlspecialchars($row['fullName']); ?>">
+                                                ✖
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php endwhile; ?>
                         </tbody>
                     </table>
-                <?php else: ?>
-                    <p class="text-center">لا يوجد طلبات عضوية</p>
-                <?php endif; ?>
-            </div>
+                </div>
+            <?php else: ?>
+                <p class="text-center fs-5 text-muted">لا يوجد طلبات عضوية</p>
+            <?php endif; ?>
         </div>
     </div>
+</div>
+
+
+</div>
+
 </div>
 
 
@@ -377,5 +425,43 @@ $requestsResult = $stmt->get_result();
         </div>
     </footer>
 
+
+    <script>document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".accept-request, .reject-request").forEach(button => {
+        button.addEventListener("click", function () {
+            let email = this.getAttribute("data-email");
+            let isAccept = this.classList.contains("accept-request");
+            let action = isAccept ? "accept" : "reject";
+            let requestRow = this.closest("tr"); // Ensure consistency with table structure
+            let buttonGroup = requestRow.querySelectorAll("button");
+
+            // Disable buttons while processing request
+            buttonGroup.forEach(btn => btn.disabled = true);
+
+            fetch("club-profile-admin.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${encodeURIComponent(email)}&action=${action}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    requestRow.remove(); // Remove the row from the table
+                } else {
+                    alert("Error: " + data.message);
+                    buttonGroup.forEach(btn => btn.disabled = false); // Re-enable buttons on error
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An unexpected error occurred. Please try again.");
+                buttonGroup.forEach(btn => btn.disabled = false); // Re-enable buttons
+            });
+        });
+    });
+});
+
+
+        </script>
 </body>
 </html>

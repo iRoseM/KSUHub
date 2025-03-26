@@ -3,7 +3,10 @@ session_start();
 include 'db_connection.php';
 
 if (!empty($_GET['ClubID']) && ctype_digit($_GET['ClubID'])) {
+
+    
     $clubID = intval($_GET['ClubID']);
+    
 
     $sql = "SELECT clubName, clubVision, image, clubAccount FROM adminuser WHERE ClubID = ?";
     $stmt = $conn->prepare($sql);
