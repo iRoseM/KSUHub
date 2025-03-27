@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteClub'])) {
 
     if ($stmt->execute()) {
         session_destroy();
-        header("Location: clubs.php"); // redirect after deletion
+        header("Location: login.html"); // redirect after deletion
         exit();
     } else {
         echo "<script>alert('حدث خطأ أثناء حذف النادي.');</script>";
