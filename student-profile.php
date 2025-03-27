@@ -35,9 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'
     $work = $_POST['workDescription'];
 
     // Get the student's membershipID
-    $membershipQuery = "SELECT membershipID FROM membership WHERE email = ?";
+    $selectedCommittee = $_POST['committee'];
+    $membershipQuery = "SELECT membershipID FROM membership WHERE email = ? AND committee = ? AND status = 'Approved'";
     $membershipStmt = $conn->prepare($membershipQuery);
-    $membershipStmt->bind_param("s", $email);
+    $membershipStmt->bind_param("ss", $email, $selectedCommittee);
     $membershipStmt->execute();
     $membershipResult = $membershipStmt->get_result();
     $membership = $membershipResult->fetch_assoc();
@@ -114,6 +115,25 @@ while ($row = $volunteerResult->fetch_assoc()) {
     $volunteerEntries[] = $row;
     $totalHours += $row['totalHours'];
 }
+
+// Fetch membership requests and statuses with club names
+$membershipRequests = [];
+$requestQuery = "
+    SELECT a.clubName, a.clubCollege, m.status
+    FROM membership m
+    JOIN adminuser a ON m.clubID = a.clubID
+    WHERE m.email = ?
+";
+$requestStmt = $conn->prepare($requestQuery);
+$requestStmt->bind_param("s", $email);
+$requestStmt->execute();
+$requestResult = $requestStmt->get_result();
+
+while ($row = $requestResult->fetch_assoc()) {
+    $membershipRequests[] = $row;
+}
+
+
 ?>
 
 
@@ -337,42 +357,41 @@ while ($row = $volunteerResult->fetch_assoc()) {
 <body>   
     
     <header id="header" class="transparent-nav">
-                <div class="head-container">
-                    <div class="navbar-header">
-                        <!-- Logo -->
-                        <div class="navbar-brand">
-                            <a class="logo" href="home.php"> <!-- Changed to .php -->
-                                <img src="./img/logo-alt.png" alt="logo">
-                            </a>
-                        </div>
-                        <!-- Mobile toggle -->
-                        <button class="navbar-toggle">
-                            <span></span>
-                        </button>
-                    </div>
-
-                    <!-- Navigation -->
-                    <nav id="nav">
-                        <ul class="main-menu nav navbar-nav navbar-right">
-                            <li><a href="home.php">الصفحة الرئيسية</a></li>
-                            <li><a href="clubs.php">النوادي</a></li>
-                                <!-- Show profile link based on user type -->
-                                <?php if($_SESSION['user_type'] == "student"): ?>
-                                    <li><a href="student-profile.php">الملف الشخصي</a></li>
-                                <?php else: ?>
-                                    <li><a href="club-profile-admin.php">ملف النادي</a></li>
-                                <?php endif; ?>
-
-                                <!-- Logout button (only for logged-in users) -->
-                                <li class="logout-item">
-                                    <a href="logout.php" class="logout-button">
-                                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-                                    </a>
-                                </li>
-                        </ul>
-                    </nav>
+        <div class="head-container">
+            <div class="navbar-header">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a class="logo" href="home.php"> <!-- Changed to .php -->
+                        <img src="./img/logo-alt.png" alt="logo">
+                    </a>
                 </div>
-            </header>
+                <!-- Mobile toggle -->
+                <button class="navbar-toggle">
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav id="nav">
+                <ul class="main-menu nav navbar-nav navbar-right">
+                    <li><a href="home.php">الصفحة الرئيسية</a></li>
+                    <li><a href="clubs.php">النوادي</a></li>
+                    <!-- Show profile link based on user type -->
+                    <?php if($_SESSION['user_type'] == "student"): ?>
+                        <li><a href="student-profile.php">الملف الشخصي</a></li>
+                    <?php else: ?>
+                        <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                    <?php endif; ?>
+                    <!-- Logout button (only for logged-in users) -->
+                        <li class="logout-item">
+                            <a href="logout.php" class="logout-button">
+                                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                            </a>
+                        </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
     <div style="direction: rtl;">
     <!-- Hero Area -->
@@ -420,15 +439,15 @@ while ($row = $volunteerResult->fetch_assoc()) {
                 <div class="volunteer-form">
                     <?php
                         $committees = [];
-                        $committeeQuery = "SELECT DISTINCT committee FROM membership WHERE email = ?";
+                        $committeeQuery = "SELECT DISTINCT committee FROM membership WHERE email = ? AND status = 'Approved'";
                         $committeeStmt = $conn->prepare($committeeQuery);
                         $committeeStmt->bind_param("s", $email);
                         $committeeStmt->execute();
                         $committeeResult = $committeeStmt->get_result();
-
+                        
                         while ($row = $committeeResult->fetch_assoc()) {
                             $committees[] = $row['committee'];
-                        }
+                        }                        
                     ?>
                     <h3>إضافة الساعات التطوعية</h3>
                     <?php if (!empty($successVolunteer)): ?>
@@ -504,12 +523,56 @@ while ($row = $volunteerResult->fetch_assoc()) {
 
             <!-- Total Volunteer Hours -->
             <div class="text-center" style="padding-top: 10px;">
-            <h3>إجمالي الساعات التطوعية: <span id="totalHours"><?= $totalHours ?></span> ساعة</h3>
+                <h3>إجمالي الساعات التطوعية: <span id="totalHours"><?= $totalHours ?></span> ساعة</h3>
             </div>
         </div>
 
-    </div>
+        <!-- Club Membership Request Status -->
+        <div class="volunteer-log" style="margin-top: 30px;">
+    <h3>الطلبات المقدمة للانضمام إلى الأندية</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>اسم النادي</th>
+                <th>الكلية</th>
+                <th>الحالة</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($membershipRequests)): ?>
+                <?php foreach ($membershipRequests as $request): ?>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">
+                                <?= htmlspecialchars($request['clubName']) ?>
+                            </span>
+
+                        </td>
+                        <td><?= htmlspecialchars($request['clubCollege']) ?></td>
+                        <td>
+                            <?php
+                                $status = $request['status'];
+                                switch ($status) {
+                                    case 'Pending':  $label = 'قيد المراجعة'; $color = 'orange'; break;
+                                    case 'Approved': $label = 'مقبول';        $color = 'green'; break;
+                                    case 'Rejected': $label = 'مرفوض';        $color = 'red'; break;
+                                    default:         $label = $status;        $color = '#333';
+                                }
+                            ?>
+                            <span style="color: <?= $color ?>; font-weight: bold;"><?= $label ?></span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="3">لم تقم بالتقديم على أي نادي بعد.</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 </div>
+
+
+    </div>
+
 
     <!-- Footer -->
 		<footer id="footer" class="section">
@@ -528,13 +591,13 @@ while ($row = $volunteerResult->fetch_assoc()) {
 					<div class="col-md-6">
 						<ul class="footer-nav">
 							<li><a href="home.php">الصفحة الرئيسية</a></li> 
-                                                        <li><a href="clubs.php">النوادي</a></li>
-                                                            <!-- Show profile link based on user type -->
-                                                            <?php if($_SESSION['user_type'] == "student"): ?>
-                                                                <li><a href="student-profile.php">الملف الشخصي</a></li>
-                                                            <?php else: ?>
-                                                                <li><a href="club-profile-admin.php">ملف النادي</a></li>
-                                                            <?php endif; ?>
+                            <li><a href="clubs.php">النوادي</a></li>
+                            <!-- Show profile link based on user type -->
+                            <?php if($_SESSION['user_type'] == "student"): ?>
+                                <li><a href="student-profile.php">الملف الشخصي</a></li>
+                            <?php else: ?>
+                                <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                            <?php endif; ?>
 						</ul>
 					</div>
 				</div>
