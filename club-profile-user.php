@@ -225,10 +225,11 @@ $conn->close();
             </div>
         <?php endif; ?>
         <!--Ar-->
-
-        <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 6rem;">
-            <a id="joinButton" class="main-button icon-button" href="#">! أنضم الينا</a>
-        </div>
+        <?php if($_SESSION['user_type'] == "student"): ?>
+            <div class="center-btn-container" style="display: flex; justify-content: center; gap: 15px;  margin-top: 6rem;">
+                <a id="joinButton" class="main-button icon-button" href="#">! أنضم الينا</a>
+            </div>
+        <?php endif; ?>
         
         <!-- About -->
         <div id="about" class="section">
@@ -269,7 +270,8 @@ $conn->close();
         </div>
     </div>
 
-    <!--Ar-->
+    <!--Request membership-->
+    <?php if($_SESSION['user_type'] == "student"): ?>
     <div id="joinSection" class="center-btn-container" style="display: flex; justify-content: center; margin-top: 6rem;">
         <?php if ($isAlreadyApplied): ?>
             <div class="alert alert-info text-center" role="alert" style="font-family: 'Noto Kufi Arabic', sans-serif; padding: 20px 25px; border-radius: 12px; font-size: 18px; direction: rtl;">
@@ -304,7 +306,7 @@ $conn->close();
             </form>
         <?php endif; ?>
     </div>
-    <!--Ar-->
+    <?php endif; ?>
     
     <!-- Club Events -->
     <div class="container">

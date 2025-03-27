@@ -319,10 +319,14 @@
                     <!-- footer nav -->
                     <div class="col-md-6">
                         <ul class="footer-nav">
-                            <li><a href="home.html">الصفحة الرئيسية</a></li>
-                            <li><a href="clubs.html"> النوادي</a></li>
-                            <li><a href="student-profile.php">الملف الشخصي</a></li>
-                            <li><a href="contact.html">تواصل معنا</a></li>
+                            <li><a href="home.php">الصفحة الرئيسية</a></li> 
+                            <li><a href="clubs.php">النوادي</a></li>
+                                <!-- Show profile link based on user type -->
+                                <?php if($_SESSION['user_type'] == "student"): ?>
+                                    <li><a href="student-profile.php">الملف الشخصي</a></li>
+                                <?php else: ?>
+                                    <li><a href="club-profile-admin.php">ملف النادي</a></li>
+                                <?php endif; ?>
                         </ul>
                     </div>
                 </div>
