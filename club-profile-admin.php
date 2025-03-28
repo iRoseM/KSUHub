@@ -43,7 +43,7 @@ $stmt->execute();
 $membersResult = $stmt->get_result();
 
 // جلب طلبات العضوية المعلقة لنادٍ معين
-$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
+$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel, s.bio, s.email FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
 $stmt = $conn->prepare($requestsQuery);
