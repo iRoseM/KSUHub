@@ -2,8 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 session_start();
-$clubID = $_SESSION['ClubID'];
-include 'db_connection.php';
+include_once 'db_connection.php';
 
 // Check if the user is logged in and is a student
 /*
@@ -15,7 +14,7 @@ if (!isset($_SESSION['user_email']) || $_SESSION['user_type'] != "clubAdmin") {
 if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
     $clubID = intval($_SESSION['ClubID']); 
 
-    $sql = "SELECT clubName, clubVision, image, clubAccount FROM adminuser WHERE ClubID = ?";
+    $sql = "SELECT clubName, clubVision, ClubGoal ,image, clubAccount FROM adminuser WHERE ClubID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $clubID);
     $stmt->execute();
@@ -27,6 +26,7 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
         $clubVision = $row["clubVision"];
         $clubImage = $row["image"];
         $clubAccount = $row["clubAccount"];
+        $clubGoal = $row["ClubGoal"];
     } else {
         echo "<p>النادي غير موجود</p>";
         exit;
@@ -34,7 +34,7 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
 
 
 // جلب الأعضاء المعتمدين لنادٍ معين
-$membersQuery = "SELECT s.fullName FROM membership m 
+$membersQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
                  JOIN studentuser s ON m.email = s.email 
                  WHERE m.status = 'Approved' AND m.clubID = ?";
 $stmt = $conn->prepare($membersQuery);
@@ -43,7 +43,7 @@ $stmt->execute();
 $membersResult = $stmt->get_result();
 
 // جلب طلبات العضوية المعلقة لنادٍ معين
-$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel FROM membership m 
+$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
 $stmt = $conn->prepare($requestsQuery);
@@ -96,17 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
 
 
 // استعلام جلب الأعضاء وطلبات العضوية
-$membersQuery = "SELECT s.fullName FROM membership m JOIN studentuser s ON m.email = s.email WHERE m.status = 'Approved' AND m.clubID = ?";
-$stmt = $conn->prepare($membersQuery);
-$stmt->bind_param("i", $clubID);
-$stmt->execute();
-$membersResult = $stmt->get_result();
 
-$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel, s.email FROM membership m JOIN studentuser s ON m.email = s.email WHERE m.status = 'Pending' AND m.clubID = ?";
-$stmt = $conn->prepare($requestsQuery);
-$stmt->bind_param("i", $clubID);
-$stmt->execute();
-$requestsResult = $stmt->get_result();
+
 ?>
 
 
@@ -261,17 +252,21 @@ $requestsResult = $stmt->get_result();
                             <h2>رؤيتنا</h2>
                         </div>
                         <div class="feature">
-                            <div class="feature-content">
-                                <h4>الرؤية :</h4>
-                                <p><?php echo $clubVision; ?></p>
-                            </div>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-content">
-                                <h4>الرسالة:</h4>
-                                <p>نهتم بتنمية مهارات الطالب التقنية والاجتماعية وغرس مفاهيم المبادرة والقيم الاخلاقيه التي تساهم في الواقع العملي.</p>
-                            </div>
-                        </div>
+    <div class="feature-content">
+        <h4>الرؤية :</h4>
+        <p><?php echo htmlspecialchars($clubVision, ENT_QUOTES, 'UTF-8'); ?></p>
+    </div>
+</div>
+
+<?php if (!empty($clubGoal)) { ?>
+    <div class="feature">
+        <div class="feature-content">
+            <h4>الرسالة:</h4>
+            <p><?php echo htmlspecialchars($clubGoal, ENT_QUOTES, 'UTF-8'); ?></p>
+        </div>
+    </div>
+<?php } ?>
+
                         <div class="feature">
                             <div class="feature-content">
                                 <h4>حساب النادي على منصة X :</h4>
@@ -329,26 +324,47 @@ $requestsResult = $stmt->get_result();
 
     <div class="Home" style="margin-top: 0rem;"> 
     <div id="members" class="section">
-        <div class="container">
-            <div class="section-header text-center">
-                <h2>Our Members</h2>
-            </div>
-            <div class="row">
-                <ul class="list-group">
-                    <?php if ($membersResult->num_rows > 0): ?>
-                        <?php while ($row = $membersResult->fetch_assoc()): ?>
-                            <li class="list-group-item"><?= htmlspecialchars($row['fullName']); ?></li>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <li class="list-group-item text-center">لا يوجد أعضاء</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-        </div>
-    </div><div id="membership-requests" class="section py-5">
+    <div class="container">
+    <div class="section-header text-center">
+        <h2>لمحة عن الأعضاء</h2>
+    </div>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>الاسم</th>
+                    <th>الكلية</th>
+                    <th>المستوى الدراسي</th>
+                    <th>النبذة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($membersResult->num_rows > 0): ?>
+                    <?php while ($row = $membersResult->fetch_assoc()): ?>
+                        <tr>
+                            <td><?= !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'غير محدد'; ?></td>
+                            <td><?= !empty($row['college']) ? htmlspecialchars($row['college']) : 'غير محدد'; ?></td>
+                            <td><?= !empty($row['studyingLevel']) ? htmlspecialchars($row['studyingLevel']) : 'غير محدد'; ?></td>
+                            <td><?= !empty($row['bio']) ? htmlspecialchars($row['bio']) : 'لا توجد نبذة'; ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" class="text-center">لا يوجد أعضاء</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+    </div>
+    <div id="membership-requests" class="section py-5">
     <div class="container">
         <div class="section-header text-center mb-4">
-            <h2 class="fw-bold">Membership Requests</h2>
+            <h2 class="fw-bold">طلبات العضوية</h2>
         </div>
         <div class="row justify-content-center">
             <?php if ($requestsResult->num_rows > 0): ?>
@@ -356,10 +372,11 @@ $requestsResult = $stmt->get_result();
                     <table class="table table-striped table-hover text-center align-middle">
                         <thead class="table-dark">
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">College</th>
-                                <th scope="col">Level</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col">الاسم</th>
+                                <th scope="col">الكلية</th>
+                                <th scope="col">المستوى الدراسي</th>
+                                <th scope="col">نبذة</th>
+                                <th scope="col">حالة الطلب</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -368,6 +385,7 @@ $requestsResult = $stmt->get_result();
                                     <td><?php echo htmlspecialchars($row['fullName']); ?></td>
                                     <td><?php echo htmlspecialchars($row['college']); ?></td>
                                     <td><?php echo htmlspecialchars($row['studyingLevel']); ?></td>
+                                    <td><?php echo !empty($row['bio']) && $row['bio'] !== NULL ? nl2br(htmlspecialchars($row['bio'])) : 'لا توجد نبذة'; ?></td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-2">
                                             <button class="btn btn-success accept-request" 
@@ -393,6 +411,7 @@ $requestsResult = $stmt->get_result();
         </div>
     </div>
 </div>
+
 
 
 </div>

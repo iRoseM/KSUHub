@@ -10,7 +10,7 @@
     $database = "ksuhubdb";   
 
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $database, 8889);
+    $conn = new mysqli($servername, $username, $password, $database, 3306);
 
     // Check connection
     if ($conn->connect_error) {
