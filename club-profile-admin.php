@@ -43,7 +43,7 @@ $stmt->execute();
 $membersResult = $stmt->get_result();
 
 // جلب طلبات العضوية المعلقة لنادٍ معين
-$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
+$requestsQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
 $stmt = $conn->prepare($requestsQuery);
@@ -79,13 +79,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
     header("Content-Type: application/json");
     
     $email = $_POST['email'];
-    $status = ($_POST['action'] === 'accept') ? 'Approved' : 'Rejected';
-
+    $action = $_POST['action'];
+    $clubID = $_SESSION['ClubID'];
     
+    // تحديد الحالة بناء على الإجراء
+    $status = ($action == 'accept') ? 'Approved' : 'Rejected';
+    
+    // تحديث الحالة في قاعدة البيانات
     $sql = "UPDATE membership SET status = ? WHERE email = ? AND clubID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssi", $status, $email, $clubID);
-        
+    
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "تم تحديث الحالة بنجاح"]);
     } else {
@@ -414,19 +418,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                        <td><?php echo !empty($row['studyingLevel']) ? htmlspecialchars($row['studyingLevel']) : 'مستوى غير متوفر'; ?></td>
                                        <td><?php echo !empty($row['bio']) ? nl2br(htmlspecialchars($row['bio'])) : 'لا توجد نبذة'; ?></td>
                                        <td>
-                                           <div class="d-flex justify-content-center gap-2">
-                                               <button class="btn btn-success accept-request" 
-                                                   data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
-                                                   aria-label="Accept request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
-                                                   قبول
-                                               </button>
-                                               <button class="btn btn-danger reject-request" 
-                                                   data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
-                                                   aria-label="Reject request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
-                                                   رفض
-                                               </button>
-                                           </div>
-                                       </td>
+    <div class="d-flex justify-content-center gap-2">
+        <button class="btn btn-success accept-request" 
+            data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
+            aria-label="Accept request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
+            قبول
+        </button>
+        <button class="btn btn-danger reject-request" 
+            data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
+            aria-label="Reject request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
+            رفض
+        </button>
+    </div>
+</td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
@@ -493,7 +497,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // إرسال الطلب
             fetch(window.location.href, {
                 method: "POST",
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `email=${encodeURIComponent(email)}&action=${encodeURIComponent(action)}`
             })
             .then(response => {
                 if (!response.ok) {
@@ -502,6 +509,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.json();
             })
             .then(data => {
+                console.log("Server response:", data); // للتصحيح
                 if (data.success) {
                     requestRow.remove();
                 } else {
