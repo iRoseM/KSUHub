@@ -349,7 +349,7 @@ $conn->close();
             <div class="row">
                 <div class="col-md-6">
                     <div class="footer-logo">
-                        <a class="logo" href="home.html">
+                        <a class="logo" href="home.php">
                             <img src="./img/logo.png" alt="logo">
                         </a>
                     </div>

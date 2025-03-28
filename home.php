@@ -318,7 +318,7 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
 					<!-- footer logo -->
 					<div class="col-md-6">
 						<div class="footer-logo">
-							<a class="logo" href="home.html">
+							<a class="logo" href="home.php">
 								<img src="./img/logo.png" alt="logo">
 							</a>
 						</div>
