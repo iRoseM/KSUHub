@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
     header("Location: index.html");
     exit();
 }*/
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +88,9 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
 						<div class="col-md-8">
 							<h1 class="white-text">وجهتك للفُرص، الفعاليات، والتَجربة</h1>
 							<p class="lead white-text">استكشف أندية جامعة الملك سعود، واجعل حياتك الجامعية أكثر إشراقًا!</p>
+							
 							<a class="main-button icon-button" href="clubs.php">تعرف على النوادي!</a>
+									
 						</div>
 					</div>
 				</div>
@@ -188,8 +191,8 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
                         <div class="col-md-6">
                             <h2 class="white-text"><?= $event['eventName'] ?></h2>
                             <p class="lead white-text"><?= $event['eventDescription'] ?></p>
-                            <a class="main-button icon-button" href="club-profile-user.php?id=<?= $event['clubID'] ?>">!إذهب لصفحة النادي</a>
-                        </div>
+							<a class="main-button icon-button" href="club-profile-user.php?ClubID=<?= $event['clubID'] ?>">!إذهب لصفحة النادي</a>
+							</div>
                     </div>
                 </div>
             </div>

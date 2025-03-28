@@ -115,33 +115,33 @@ session_start();
 					<div id="main" class="col-md-9">
 						<p id="no-results" class="text-center" style="display: none; margin-top: 20px;">لا توجد نتائج مطابقة لبحثك</p>
 						<?php
-include 'db_connection.php';
+						include 'db_connection.php';
 
-$sql = "SELECT * FROM adminuser";
+						$sql = "SELECT * FROM adminuser";
 
-$college = isset($_GET['college']) ? $_GET['college'] : '';
-if (!empty($college)) {
-    $college = $conn->real_escape_string($college);
-    if (strpos($sql, 'WHERE') !== false) {
-        $sql .= " AND affiliation LIKE '%$college%'";
-    } else {
-        $sql .= " WHERE affiliation LIKE '%$college%'";
-    }
-}
-$result = $conn->query($sql);
+						$college = isset($_GET['college']) ? $_GET['college'] : '';
+						if (!empty($college)) {
+							$college = $conn->real_escape_string($college);
+							if (strpos($sql, 'WHERE') !== false) {
+								$sql .= " AND affiliation LIKE '%$college%'";
+							} else {
+								$sql .= " WHERE affiliation LIKE '%$college%'";
+							}
+						}
+						$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
-    while ($club = $result->fetch_assoc()) {
-        // استخراج ClubID وضمان أنه عدد صحيح
-        $clubID = isset($club['clubID']) ? intval($club['clubID']) : 0;
+						if ($result->num_rows > 0) {
+							while ($club = $result->fetch_assoc()) {
+								// استخراج ClubID وضمان أنه عدد صحيح
+								$clubID = isset($club['clubID']) ? intval($club['clubID']) : 0;
 
-        // تحقق من وجود ClubID وصياغة الرابط بناءً عليه
-        if ($clubID > 0) {
-            $clubLink = "club-profile-user.php?ClubID=" . $clubID;
-        } else {
-            $clubLink = "#";
-        }
-        ?>
+								// تحقق من وجود ClubID وصياغة الرابط بناءً عليه
+								if ($clubID > 0) {
+									$clubLink = "club-profile-user.php?ClubID=" . $clubID;
+								} else {
+									$clubLink = "#";
+								}
+						?>
         <div class="col-md-6 club-card" data-name="<?= strtolower($club['clubName']) ?>" data-college="<?= strtolower($club['clubCollege']) ?>">
             <div class="single-club">
                 <div class="club-img">
@@ -216,13 +216,13 @@ if ($result->num_rows > 0) {
 					<div class="col-md-6">
 						<ul class="footer-nav">
 							<li><a href="home.php">الصفحة الرئيسية</a></li> 
-                                                        <li><a href="clubs.php">النوادي</a></li>
-                                                            <!-- Show profile link based on user type -->
-                                                            <?php if($_SESSION['user_type'] == "student"): ?>
-                                                                <li><a href="student-profile.php">الملف الشخصي</a></li>
-                                                            <?php else: ?>
-                                                                <li><a href="club-profile-admin.php">ملف النادي</a></li>
-                                                            <?php endif; ?>
+							<li><a href="clubs.php">النوادي</a></li>
+								<!-- Show profile link based on user type -->
+								<?php if($_SESSION['user_type'] == "student"): ?>
+									<li><a href="student-profile.php">الملف الشخصي</a></li>
+								<?php else: ?>
+									<li><a href="club-profile-admin.php">ملف النادي</a></li>
+								<?php endif; ?>
 						</ul>
 					</div>
 				</div>
