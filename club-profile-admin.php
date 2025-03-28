@@ -57,7 +57,7 @@ $requestsResult = $stmt->get_result();
     $stmtEvents->bind_param("i", $clubID);
     $stmtEvents->execute();
     $resultEvents = $stmtEvents->get_result();
-
+ 
     if ($resultEvents->num_rows > 0) {
         $events = [];
         while ($event = $resultEvents->fetch_assoc()) {
