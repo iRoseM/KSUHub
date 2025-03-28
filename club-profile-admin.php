@@ -34,7 +34,7 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
 
 
 // جلب الأعضاء المعتمدين لنادٍ معين
-$membersQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
+$membersQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
                  JOIN studentuser s ON m.email = s.email 
                  WHERE m.status = 'Approved' AND m.clubID = ?";
 $stmt = $conn->prepare($membersQuery);
@@ -43,7 +43,7 @@ $stmt->execute();
 $membersResult = $stmt->get_result();
 
 // جلب طلبات العضوية المعلقة لنادٍ معين
-$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
+$requestsQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
 $stmt = $conn->prepare($requestsQuery);
@@ -74,28 +74,50 @@ $requestsResult = $stmt->get_result();
     exit;
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_POST['email'])) {
-    header("Content-Type: application/json"); // لضمان استجابة JSON
-
+    header("Content-Type: application/json");
+    
     $email = $_POST['email'];
-    $status = ($_POST['action'] === 'accept') ? 'Approved' : 'Rejected';
-
-    $sql = "UPDATE membership SET status = ? WHERE email = ?";
+    $action = $_POST['action'];
+    
+    // تحديد الحالة بناء على الإجراء
+    $status = ($action == 'accept') ? 'Approved' : 'Rejected';
+    
+    // تحديث الحالة في قاعدة البيانات
+    $sql = "UPDATE membership SET status = ? WHERE email = ? AND clubID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $status, $email);
+    $stmt->bind_param("ssi", $status, $email, $clubID);
     
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "تم تحديث الحالة بنجاح"]);
     } else {
-        echo json_encode(["success" => false, "message" => "حدث خطأ أثناء التحديث"]);
+        echo json_encode(["success" => false, "message" => "حدث خطأ أثناء التحديث: " . $stmt->error]);
     }
+    
+    $stmt->close();
     exit;
 }
 
-
-// استعلام جلب الأعضاء وطلبات العضوية
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'delete_member' && isset($_POST['email'])) {
+    header("Content-Type: application/json");
+    
+    $email = $_POST['email'];
+    $clubID = $_SESSION['ClubID'];
+    
+    // حذف العضو من جدول العضوية
+    $sql = "DELETE FROM membership WHERE email = ? AND clubID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("si", $email, $clubID);
+    
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "تم حذف العضو بنجاح"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "حدث خطأ أثناء الحذف: " . $stmt->error]);
+    }
+    
+    $stmt->close();
+    exit;
+}
 
 ?>
 
@@ -322,97 +344,102 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
 
 
     <div class="Home" style="margin-top: 0rem;"> 
-    <div id="members" class="section">
-    <div class="container">
-    <div class="section-header text-center">
-        <h2>لمحة عن الأعضاء</h2>
-    </div>
-    <div class="row">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>الاسم</th>
-                    <th>الكلية</th>
-                    <th>المستوى الدراسي</th>
-                    <th>النبذة</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div id="members" class="section py-5">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="fw-bold">لمحة عن الأعضاء</h2>
+            </div>
+            <div class="row justify-content-center">
                 <?php if ($membersResult->num_rows > 0): ?>
-                    <?php while ($row = $membersResult->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'غير محدد'; ?></td>
-                            <td><?= !empty($row['college']) ? htmlspecialchars($row['college']) : 'غير محدد'; ?></td>
-                            <td><?= !empty($row['studyingLevel']) ? htmlspecialchars($row['studyingLevel']) : 'غير محدد'; ?></td>
-                            <td><?= !empty($row['bio']) ? htmlspecialchars($row['bio']) : 'لا توجد نبذة'; ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="text-center">لا يوجد أعضاء</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-
-    </div>
-    <div id="membership-requests" class="section py-5">
-    <div class="container">
-        <div class="section-header text-center mb-4">
-            <h2 class="fw-bold">طلبات العضوية</h2>
-        </div>
-        <div class="row justify-content-center">
-            <?php if ($requestsResult->num_rows > 0): ?>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover text-center align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th scope="col">الاسم</th>
-                                <th scope="col">الكلية</th>
-                                <th scope="col">المستوى الدراسي</th>
-                                <th scope="col">نبذة</th>
-                                <th scope="col">حالة الطلب</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = $requestsResult->fetch_assoc()): ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover text-center align-middle">
+                            <thead class="table-dark">
                                 <tr>
-                                    <td><?php echo htmlspecialchars($row['fullName']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['college']); ?></td>
-                                    <td><?php echo htmlspecialchars($row['studyingLevel']); ?></td>
-                                    <td><?php echo !empty($row['bio']) && $row['bio'] !== NULL ? nl2br(htmlspecialchars($row['bio'])) : 'لا توجد نبذة'; ?></td>
-                                    <td>
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <button class="btn btn-success accept-request" 
-                                                data-email="<?php echo htmlspecialchars($row['email']); ?>" 
-                                                aria-label="Accept request from <?php echo htmlspecialchars($row['fullName']); ?>">
-                                                ✔
-                                            </button>
-                                            <button class="btn btn-danger reject-request" 
-                                                data-email="<?php echo htmlspecialchars($row['email']); ?>" 
-                                                aria-label="Reject request from <?php echo htmlspecialchars($row['fullName']); ?>">
-                                                ✖
-                                            </button>
-                                        </div>
-                                    </td>
+                                    <th scope="col">الاسم</th>
+                                    <th scope="col">الكلية</th>
+                                    <th scope="col">المستوى الدراسي</th>
+                                    <th scope="col">النبذة</th>
+                                    <th scope="col">إدارة العضو</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <p class="text-center fs-5 text-muted">لا يوجد طلبات عضوية</p>
-            <?php endif; ?>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $membersResult->fetch_assoc()): ?>
+                                    <tr>
+                                        <td><?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'اسم غير متوفر'; ?></td>
+                                        <td><?php echo !empty($row['college']) ? htmlspecialchars($row['college']) : 'كلية غير متوفرة'; ?></td>
+                                        <td><?php echo !empty($row['studyingLevel']) ? htmlspecialchars($row['studyingLevel']) : 'مستوى غير متوفر'; ?></td>
+                                        <td><?php echo !empty($row['bio']) ? nl2br(htmlspecialchars($row['bio'])) : 'لا توجد نبذة'; ?></td>
+                                        <td>
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <button class="btn btn-danger delete-member" 
+                                                    data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
+                                                    aria-label="Delete member <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
+                                                    حذف العضو
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-center fs-5 text-muted">لا يوجد أعضاء</p>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
-</div>
 
-
-
+    <div id="membership-requests" class="section py-5">
+        <div class="container">
+            <div class="section-header text-center mb-4">
+                <h2 class="fw-bold">طلبات العضوية</h2>
+            </div>
+            <div class="row justify-content-center">
+                <?php if ($requestsResult->num_rows > 0): ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover text-center align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th scope="col">الاسم</th>
+                                    <th scope="col">الكلية</th>
+                                    <th scope="col">المستوى الدراسي</th>
+                                    <th scope="col">نبذة</th>
+                                    <th scope="col">حالة الطلب</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $requestsResult->fetch_assoc()): ?>
+                                    <tr>
+                                       <td><?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'اسم غير متوفر'; ?></td>
+                                       <td><?php echo !empty($row['college']) ? htmlspecialchars($row['college']) : 'كلية غير متوفرة'; ?></td>
+                                       <td><?php echo !empty($row['studyingLevel']) ? htmlspecialchars($row['studyingLevel']) : 'مستوى غير متوفر'; ?></td>
+                                       <td><?php echo !empty($row['bio']) ? nl2br(htmlspecialchars($row['bio'])) : 'لا توجد نبذة'; ?></td>
+                                       <td>
+                                           <div class="d-flex justify-content-center gap-2">
+                                               <button class="btn btn-success accept-request" 
+                                                   data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
+                                                   aria-label="Accept request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
+                                                   قبول
+                                               </button>
+                                               <button class="btn btn-danger reject-request" 
+                                                   data-email="<?php echo !empty($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" 
+                                                   aria-label="Reject request from <?php echo !empty($row['fullName']) ? htmlspecialchars($row['fullName']) : 'Unknown'; ?>">
+                                                   رفض
+                                               </button>
+                                           </div>
+                                       </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-center fs-5 text-muted">لا يوجد طلبات عضوية</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
 </div>
@@ -443,44 +470,120 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
             </div>
         </div>
     </footer>
-
-
-    <script>document.addEventListener("DOMContentLoaded", function () {
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // معالجة قبول/رفض الطلبات
     document.querySelectorAll(".accept-request, .reject-request").forEach(button => {
         button.addEventListener("click", function () {
             let email = this.getAttribute("data-email");
             let isAccept = this.classList.contains("accept-request");
             let action = isAccept ? "accept" : "reject";
-            let requestRow = this.closest("tr"); // Ensure consistency with table structure
+            let requestRow = this.closest("tr");
             let buttonGroup = requestRow.querySelectorAll("button");
 
-            // Disable buttons while processing request
-            buttonGroup.forEach(btn => btn.disabled = true);
+            // تعطيل الأزرار أثناء المعالجة
+            buttonGroup.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add("disabled");
+            });
 
-            fetch("club-profile-admin.php", {
+            // إعداد بيانات الإرسال
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('action', action);
+
+            // إرسال الطلب
+            fetch(window.location.href, {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `email=${encodeURIComponent(email)}&action=${action}`
+                body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    requestRow.remove(); // Remove the row from the table
+                    requestRow.remove();
                 } else {
-                    alert("Error: " + data.message);
-                    buttonGroup.forEach(btn => btn.disabled = false); // Re-enable buttons on error
+                    alert("خطأ: " + (data.message || "حدث خطأ غير معروف"));
+                    buttonGroup.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove("disabled");
+                    });
                 }
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("An unexpected error occurred. Please try again.");
-                buttonGroup.forEach(btn => btn.disabled = false); // Re-enable buttons
+                alert("حدث خطأ في الاتصال بالخادم");
+                buttonGroup.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove("disabled");
+                });
+            });
+        });
+    });
+
+    // معالجة حذف الأعضاء
+    document.querySelectorAll(".delete-member").forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+            
+            if (!confirm("هل أنت متأكد من رغبتك في حذف هذا العضو؟")) {
+                return false;
+            }
+
+            let email = this.getAttribute("data-email");
+            let memberRow = this.closest("tr");
+            let buttonGroup = memberRow.querySelectorAll("button");
+
+            // تعطيل الأزرار أثناء المعالجة
+            buttonGroup.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add("disabled");
+            });
+
+            // إعداد بيانات الإرسال
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('action', 'delete_member');
+
+            // إرسال الطلب
+            fetch(window.location.href, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    memberRow.remove();
+                    alert("تم حذف العضو بنجاح");
+                } else {
+                    alert("خطأ: " + (data.message || "حدث خطأ غير معروف"));
+                    buttonGroup.forEach(btn => {
+                        btn.disabled = false;
+                        btn.classList.remove("disabled");
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("حدث خطأ في الاتصال بالخادم");
+                buttonGroup.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove("disabled");
+                });
             });
         });
     });
 });
+</script>
 
-
-        </script>
 </body>
 </html>
