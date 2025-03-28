@@ -205,7 +205,7 @@ $conn->close();
 
         <div class="container">
             <div class="row">
-                <div class="col-md-8" style="margin-top: 40rem;">
+                <div class="col-md-8" style="margin-top: 43rem;">
                     <h1 class="white-text"><?php echo "مرحبا بكم في " . $clubName; ?></h1>
                     <p class="lead white-text">Join us and be part of a great community.</p>
                 </div>
@@ -272,7 +272,7 @@ $conn->close();
 
     <!--Request membership-->
     <?php if($_SESSION['user_type'] == "student"): ?>
-    <div id="joinSection" class="center-btn-container" style="display: flex; justify-content: center; margin-top: 6rem;">
+    <div id="joinSection" class="center-btn-container" style="display: flex; justify-content: center; margin-top: 0rem; margin-bottom:10rem;">
         <?php if ($isAlreadyApplied): ?>
             <div class="alert alert-info text-center" role="alert" style="font-family: 'Noto Kufi Arabic', sans-serif; padding: 20px 25px; border-radius: 12px; font-size: 18px; direction: rtl;">
                 لقد قمت بالتقديم لهذا النادي مسبقًا.
@@ -337,7 +337,7 @@ $conn->close();
                         </div>";
                     }
                 } else {
-                    echo "<p>لا توجد فعاليات حالياً ل {$clubName}</p>";
+                    echo "<p style='text-align:center;'>لا توجد فعاليات حالياً ل {$clubName}</p>";
                 }
                 ?>
             </div>

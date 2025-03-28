@@ -16,7 +16,7 @@ $events = [
     1 => "img/data-jam.png",   
     2 => "img/data-jam.png",    
     3 => "img/kanaba.png" ,  
-    4 => "img/Eid.png",  
+    4 => "img/EidLogo.png",  
     5 => "img/ftc_talks.png"
 ];
 

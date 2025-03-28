@@ -88,7 +88,7 @@ if (!isset($_SESSION['user_email']) || !in_array($_SESSION['user_type'], ["stude
 						<div class="col-md-8">
 							<h1 class="white-text">وجهتك للفُرص، الفعاليات، والتَجربة</h1>
 							<p class="lead white-text">استكشف أندية جامعة الملك سعود، واجعل حياتك الجامعية أكثر إشراقًا!</p>
-							<a class="main-button icon-button" href="clubs.html">تعرف على النوادي!</a>
+							<a class="main-button icon-button" href="clubs.php">تعرف على النوادي!</a>
 						</div>
 					</div>
 				</div>
