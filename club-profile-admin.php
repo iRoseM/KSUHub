@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//error_reporting(E_ALL);
 session_start();
 include_once 'db_connection.php';
 
@@ -33,7 +33,6 @@ if (isset($_SESSION['ClubID']) && ctype_digit(strval($_SESSION['ClubID']))) {
     }
 
 
-// جلب الأعضاء المعتمدين لنادٍ معين
 $membersQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
                  JOIN studentuser s ON m.email = s.email 
                  WHERE m.status = 'Approved' AND m.clubID = ?";
@@ -42,7 +41,6 @@ $stmt->bind_param("i", $clubID);
 $stmt->execute();
 $membersResult = $stmt->get_result();
 
-// جلب طلبات العضوية المعلقة لنادٍ معين
 $requestsQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
