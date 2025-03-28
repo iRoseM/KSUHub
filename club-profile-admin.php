@@ -43,13 +43,14 @@ $stmt->execute();
 $membersResult = $stmt->get_result();
 
 // جلب طلبات العضوية المعلقة لنادٍ معين
-$requestsQuery = "SELECT s.email, s.fullName, s.college, s.studyingLevel, s.bio FROM membership m 
+$requestsQuery = "SELECT s.fullName, s.college, s.studyingLevel ,s.bio FROM membership m 
                   JOIN studentuser s ON m.email = s.email 
                   WHERE m.status = 'Pending' AND m.clubID = ?";
 $stmt = $conn->prepare($requestsQuery);
 $stmt->bind_param("i", $clubID);
 $stmt->execute();
 $requestsResult = $stmt->get_result();
+
 
 
     $sqlEvents = "SELECT eventName, eventDescription, image FROM event WHERE clubID = ?";
@@ -78,15 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
     header("Content-Type: application/json");
     
     $email = $_POST['email'];
-    $action = $_POST['action'];
-    
-    // تحديد الحالة بناء على الإجراء
-    $status = ($action == 'accept') ? 'Approved' : 'Rejected';
-    
-    // تحديث الحالة في قاعدة البيانات
-    $sql = "UPDATE membership SET status = ? WHERE email = ? AND clubID = ?";
+    $status = ($_POST['action'] === 'accept') ? 'Approved' : 'Rejected';
+
+    $sql = "UPDATE membership SET status = ? WHERE email = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $status, $email, $clubID);
+    $stmt->bind_param("ss", $status, $email);
     
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "تم تحديث الحالة بنجاح"]);

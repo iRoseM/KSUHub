@@ -35,10 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hours'], $_POST['date'
     $work = $_POST['workDescription'];
 
     // Get the student's membershipID
-    $selectedCommittee = $_POST['committee'];
-    $membershipQuery = "SELECT membershipID FROM membership WHERE email = ? AND committee = ? AND status = 'Approved'";
+    list($selectedCommittee, $selectedClubID) = explode('|', $_POST['committee']);
+    $membershipQuery = "SELECT membershipID FROM membership WHERE email = ? AND committee = ? AND clubID = ? AND status = 'Approved'";
     $membershipStmt = $conn->prepare($membershipQuery);
-    $membershipStmt->bind_param("ss", $email, $selectedCommittee);
+    $membershipStmt->bind_param("sss", $email, $selectedCommittee, $selectedClubID);
     $membershipStmt->execute();
     $membershipResult = $membershipStmt->get_result();
     $membership = $membershipResult->fetch_assoc();
@@ -438,16 +438,23 @@ while ($row = $requestResult->fetch_assoc()) {
             <div class="col-md-8">
                 <div class="volunteer-form">
                     <?php
-                        $committees = [];
-                        $committeeQuery = "SELECT DISTINCT committee FROM membership WHERE email = ? AND status = 'Approved'";
+                        $committeeQuery = "
+                            SELECT m.committee, a.clubName, a.clubID 
+                            FROM membership m 
+                            JOIN adminuser a ON m.clubID = a.clubID 
+                            WHERE m.email = ? AND m.status = 'Approved'";
+
                         $committeeStmt = $conn->prepare($committeeQuery);
                         $committeeStmt->bind_param("s", $email);
                         $committeeStmt->execute();
                         $committeeResult = $committeeStmt->get_result();
-                        
                         while ($row = $committeeResult->fetch_assoc()) {
-                            $committees[] = $row['committee'];
-                        }                        
+                            $committees[] = [
+                                'committee' => $row['committee'],
+                                'clubName' => $row['clubName'],
+                                'clubID' => $row['clubID']
+                            ];
+                        }                                                                      
                     ?>
                     <h3>إضافة الساعات التطوعية</h3>
                     <?php if (!empty($successVolunteer)): ?>
@@ -465,9 +472,12 @@ while ($row = $requestResult->fetch_assoc()) {
                                     <option value="">أنت لست ضمن أي لجنة حالياً</option>
                                 <?php else: ?>
                                     <option value="" disabled selected>اختر اللجنة</option>
-                                    <?php foreach ($committees as $committee): ?>
-                                        <option value="<?= $committee ?>"><?= $committee ?></option>
-                                    <?php endforeach; ?>
+                                    <?php foreach ($committees as $item): ?>
+                                        <option value="<?= $item['committee'] ?>|<?= $item['clubID'] ?>">
+                                            <?= $item['committee'] ?> - <?= $item['clubName'] ?>
+                                        </option>
+                                <?php endforeach; ?>
+
                                 <?php endif; ?>
                             </select>
 
