@@ -81,9 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && isset($_P
     $email = $_POST['email'];
     $status = ($_POST['action'] === 'accept') ? 'Approved' : 'Rejected';
 
-    $sql = "UPDATE membership SET status = ? WHERE email = ?";
+    $sql = "UPDATE membership SET status = ? WHERE email = ? AND clubID = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $status, $email);
+    $stmt->bind_param("ssi", $status, $email, $clubID);  // Note: 'i' for clubID because it's an integer
+
     
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "تم تحديث الحالة بنجاح"]);
