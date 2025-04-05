@@ -22,3 +22,4 @@ It simplifies club discovery, membership, and management for students and admini
 
 ## Website link:
 http://ksuhub.wuaze.com/
+- Note: We recommend opening the link in a private browsing window.
