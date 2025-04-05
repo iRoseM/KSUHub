@@ -20,5 +20,5 @@ It simplifies club discovery, membership, and management for students and admini
 - Boosts student engagement in extracurricular activities.
 - Enhances the university’s reputation.
 
-## Product Vision
-The next section will outline the product vision, focusing on the platform's goals and direction.
+## Website link:
+http://ksuhub.wuaze.com/
